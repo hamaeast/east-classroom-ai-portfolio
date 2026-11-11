@@ -1,4 +1,4 @@
-# HSJA EAST Dashboard: AI-assisted project learning platform
+# EAST Dashboard: AI-assisted project learning platform
 
 A classroom web app for a junior-high **EAST** program. Students plan work with weekly goals, report progress in weekly check-ins backed by evidence, and complete assignments and reflections. The teacher reviews all of it in one place. AI gives students short feedback, inspects their evidence links, scores work against rubrics, and drafts learning summaries. The teacher stays in charge of grades and final judgments.
 

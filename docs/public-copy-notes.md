@@ -16,7 +16,6 @@ This repository was made from an export of the production Base44 app and then cl
 
 ## Kept on purpose
 
-- **The app's name, "HSJA EAST Dashboard,"** in the README title. It uses the school's initials, which I chose to keep so the project can be connected to my work. The code itself uses generic settings instead of school names (see above). No student information is tied to the name.
 - **EAST Initiative logo URL** (public program branding) and Base44 documentation links.
 - **School-year dates and holiday dates** in `gradingPeriods.js` and `schoolCalendar.js`. The grading logic needs them, and they contain no personal information. They follow one district's public calendar, so a determined reader could narrow down the region. Replace them if that matters.
 - **`America/Chicago` time zone** used for deadlines.
