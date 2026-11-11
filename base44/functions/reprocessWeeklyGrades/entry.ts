@@ -109,11 +109,14 @@ export default async function(req: Request): Promise<Response> {
       const combinedGoalPoints = goalSubmissions.length ? Math.max(...goalSubmissions.map(candidate => Math.min(5, Number(candidate.goal_grade ?? 5)))) : 0;
       const combinedReflectionPoints = reflectionSubmissions.length ? Math.max(...reflectionSubmissions.map(candidate => Math.min(5, Number(candidate.reflection_grade ?? 5)))) : 0;
       const hasReflection = reflectionSubmissions.length > 0;
-      const needsReview = combinedGoalPoints === 4 || combinedReflectionPoints === 4;
+      // Late original submissions are graded automatically with their one-point deduction.
+      // Only CART make-up answers still wait for a teacher to read them.
+      const isMakeup = Boolean(goal.cart_goal_submitted_at || goal.cart_reflection_submitted_at);
+      const needsReview = isMakeup && (combinedGoalPoints === 4 || combinedReflectionPoints === 4);
       const grade = gradeByKey.get(`${assignment.id}:${goal.student_id}`);
       const automaticNote = grade?.teacher_note === 'Goal reflection not submitted by the accommodated deadline';
       const protectedGrade = grade?.excused || (grade?.teacher_note && !automaticNote);
-      const teacherNote = needsReview ? 'Late goal or reflection requires review' : reflectionPastDue && !hasReflection && !reflectionExempt ? 'Goal reflection not submitted by the accommodated deadline' : null;
+      const teacherNote = needsReview ? 'CART make-up requires review' : reflectionPastDue && !hasReflection && !reflectionExempt ? 'Goal reflection not submitted by the accommodated deadline' : null;
       const gradeData = { assignment_id: assignment.id, student_id: goal.student_id, points: combinedGoalPoints + combinedReflectionPoints, auto_points: combinedGoalPoints + combinedReflectionPoints, status: needsReview ? 'pending_review' : 'graded', teacher_note: teacherNote };
       if (!protectedGrade && grade && changed(grade, gradeData)) gradeUpdates.push({ id: grade.id, ...gradeData });
       else if (!grade && (combinedGoalPoints || combinedReflectionPoints || reflectionPastDue)) gradeCreates.push(gradeData);

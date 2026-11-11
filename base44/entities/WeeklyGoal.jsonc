@@ -119,64 +119,14 @@
       ]
     },
     "create": {
-      "$or": [
-        {
-          "$and": [
-            {
-              "data.student_id": "{{user.id}}"
-            },
-            {
-              "data.week_start": {
-                "$nin": [
-                  "2026-08-03",
-                  "2026-08-10",
-                  "2026-08-17",
-                  "2026-08-24",
-                  "2026-08-31",
-                  "2026-09-07",
-                  "2026-09-14",
-                  "2026-09-21"
-                ]
-              }
-            }
-          ]
-        },
-        {
-          "user_condition": {
-            "role": "admin"
-          }
-        }
-      ]
+      "user_condition": {
+        "role": "admin"
+      }
     },
     "update": {
-      "$or": [
-        {
-          "$and": [
-            {
-              "data.student_id": "{{user.id}}"
-            },
-            {
-              "data.week_start": {
-                "$nin": [
-                  "2026-08-03",
-                  "2026-08-10",
-                  "2026-08-17",
-                  "2026-08-24",
-                  "2026-08-31",
-                  "2026-09-07",
-                  "2026-09-14",
-                  "2026-09-21"
-                ]
-              }
-            }
-          ]
-        },
-        {
-          "user_condition": {
-            "role": "admin"
-          }
-        }
-      ]
+      "user_condition": {
+        "role": "admin"
+      }
     },
     "delete": {
       "user_condition": {

@@ -1,6 +1,7 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.44';
 import { isFullSchoolWeekClosed } from '../../shared/schoolDeadline.ts';
 import { isNineWeeksClosed } from '../../shared/gradingPeriods.ts';
+import { chicagoEndOfDay, chicagoToday } from '../../shared/deadlines.ts';
 
 export default async function(req: Request): Promise<Response> {
   try {
@@ -72,6 +73,18 @@ export default async function(req: Request): Promise<Response> {
 
     const weeklyGoals = await base44.asServiceRole.entities.WeeklyGoal.filter({ week_start: weekStart });
     if (weeklyGoals.length) await base44.asServiceRole.entities.WeeklyGoal.bulkUpdate(weeklyGoals.map(item => ({ id: item.id, goal_assignment_id: combined.id, reflection_assignment_id: combined.id, ...(weekStart === '2026-10-05' ? { reflection_due_at: '2026-10-19T23:59:59-05:00' } : {}) })));
+    // A student opening their goal page for the week gets their own record created here,
+    // with the due dates the screen used to set in the browser.
+    if (user.role !== 'admin' && !weeklyGoals.some(item => item.student_id === user.id)) {
+      await base44.asServiceRole.entities.WeeklyGoal.create({
+        student_id: user.id,
+        week_start: weekStart,
+        goal_due_at: chicagoEndOfDay(chicagoToday()),
+        reflection_due_at: chicagoEndOfDay(reflectionDueDate),
+        goal_assignment_id: combined.id,
+        reflection_assignment_id: combined.id
+      });
+    }
     return Response.json({ goalAssignmentId: combined.id, reflectionAssignmentId: combined.id, active: combined.is_active !== false });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });

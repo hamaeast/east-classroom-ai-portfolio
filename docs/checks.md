@@ -5,11 +5,11 @@ Run on 2026-11-11 with Node 24.20 and npm 11.19 on macOS.
 | Check | Command | Result |
 |-|-|-|
 | Install | `npm ci` | OK |
-| Lint | `npm run lint` | **Pass.** Lint covers `src/components` and `src/pages` per `eslint.config.js`. Three errors that were already in the export were fixed. |
+| Lint | `npm run lint` | **Pass.** Three unused imports from the 2026-11-11 security update were also removed. Lint covers `src/components` and `src/pages` per `eslint.config.js`. Three errors that were already in the export were fixed. |
 | Production build | `npm run build` | **Pass.** Vite warns that two chunks are larger than 500 kB. |
 | Demo rule tests | `node --test demo/policy.test.mjs` | **11/11 pass** (goal, check-in, assignment scoring, makeup scoring, standards keep-highest, standards nine-weeks grade) |
 | Demo syntax | `node --check demo/demo.js demo/data.js` | Pass |
-| Type check | `npm run typecheck` | **329 errors, the same count as the unmodified export.** The project is JavaScript with loose JSDoc types; these were already there and were not addressed. |
+| Type check | `npm run typecheck` | **328 errors** (329 in the original export). The project is JavaScript with loose JSDoc types; these were already there and were not addressed. |
 | Dependency audit | `npm audit --omit=dev` | 14 advisories (7 moderate, 6 high, 1 critical) in the export's dependency versions, e.g. `react-router`, `dompurify`, `quill`, `zod`. Not changed here, to avoid altering behavior. |
 | Secret and identifier scan | `grep` for API-key, token, private-key and JWT patterns; emails; school, district and student names; the Base44 app ID; Drive folder IDs | No matches outside placeholders |
 | Demo network isolation | Opened the demo in a browser and called `fetch()` to Base44, an outside site, and the demo's own server | **All three blocked** by the page's `connect-src 'none'` policy. The only requests in the network log were for the demo's own HTML, CSS and JS files. |

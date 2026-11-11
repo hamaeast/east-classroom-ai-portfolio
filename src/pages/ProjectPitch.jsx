@@ -57,10 +57,7 @@ export default function ProjectPitch() {
   const [form, setForm] = useState(blank);
   const submit = async (e) => {
     e.preventDefault();
-    const emails = [...new Set([...(form.tagged_emails || '').split(','), me.email].map(value => (value || '').trim().toLowerCase()).filter(Boolean))];
-    const studentNames = [...new Set([me.full_name || me.email, ...form.tagged_names].filter(Boolean))];
-    const { tagged_names, ...pitchForm } = form;
-    await base44.entities.ProjectPitch.create({ ...pitchForm, student_names: studentNames.join(', '), tagged_emails: emails.join(', '), member_emails: emails, approval_status: 'pending' });
+    await base44.functions.invoke('submitProjectPitch', { action: 'create', ...form });
     setForm(blank);
     reload();
   };
@@ -74,9 +71,11 @@ export default function ProjectPitch() {
     if (unread.length) await base44.entities.PitchNotification.bulkUpdate(unread.map(item => ({ id: item.id, read: true })));
   };
   const markPitchInteraction = async (id, field) => {
-    const changes = { [field]: new Date().toISOString() };
-    if (field === 'admin_feedback_at') changes.student_changed_fields = [];
-    await base44.entities.ProjectPitch.update(id, changes);
+    if (field === 'admin_feedback_at') {
+      await base44.entities.ProjectPitch.update(id, { admin_feedback_at: new Date().toISOString(), student_changed_fields: [] });
+    } else {
+      await base44.functions.invoke('submitProjectPitch', { action: 'touch', pitchId: id });
+    }
     await reload();
   };
   const setPitchLifecycle = async (pitch, status) => {
@@ -117,23 +116,21 @@ export default function ProjectPitch() {
   const [techDraft, setTechDraft] = useState('');
   const startEditTech = (x) => { setEditingTechId(x.id); setTechDraft(x.technology_use || ''); };
   const saveTech = async (x) => {
-    await base44.entities.ProjectPitch.update(x.id, { technology_use: techDraft, approval_status: 'pending', student_changed_fields: ['technology_use'], student_interaction_at: new Date().toISOString() });
+    await base44.functions.invoke('submitProjectPitch', { action: 'update', pitchId: x.id, technology_use: techDraft });
     setEditingTechId(null);
     reload();
   };
   const canEditPitch = (item) => !isAdmin && isPitchStudent(item, me);
   const saveStudentPitchChanges = async (item, changes) => {
     const fieldLabels = { project_title: 'project title', problem: 'problem', solution: 'solution', technology_use: 'technology use', ethics_statement: 'ethical approach', ethical_concerns: 'ethical concerns', client_name: 'client', community_partner_name: 'community partner' };
-    const changedFields = Object.keys(fieldLabels).filter(field => String(changes[field] || '') !== String(item[field] || ''));
-    const emails = [...new Set([...(changes.tagged_emails || item.tagged_emails || '').split(','), me?.email].map(email => (email || '').trim().toLowerCase()).filter(Boolean))];
-    const teamChanged = emails.slice().sort().join(',') !== (item.member_emails || (item.tagged_emails || '').split(',')).map(email => email.trim().toLowerCase()).filter(Boolean).sort().join(',');
-    const taggedNames = users.filter(user => emails.includes((user.email || '').toLowerCase())).map(user => user.display_name || user.full_name || user.email);
-    const { tagged_names, ...pitchChanges } = changes;
-    const reviewChanges = changedFields.length || teamChanged ? { approval_status: 'pending', student_interaction_at: new Date().toISOString() } : {};
-    await base44.entities.ProjectPitch.update(item.id, { ...pitchChanges, tagged_emails: emails.join(', '), member_emails: emails, student_names: [...new Set(taggedNames)].join(', '), ...reviewChanges, student_changed_fields: changedFields });
+    // The server decides the resubmitted status and records which fields changed.
+    const { data } = await base44.functions.invoke('submitProjectPitch', { action: 'update', pitchId: item.id, ...changes });
+    const saved = data?.pitch || item;
+    const changedFields = data?.changedFields || [];
+    const teamChanged = Boolean(data?.teamChanged);
     if (teamChanged) await base44.functions.invoke('syncPitchMembers', { pitchId: item.id });
     const changeLabels = [...changedFields.map(field => fieldLabels[field]), ...(teamChanged ? ['team members'] : [])];
-    if (changeLabels.length) await base44.entities.Comment.create({ parent_type: 'pitch', parent_id: item.id, message: `Edited the pitch: ${changeLabels.join(', ')}.`, author_name: me?.full_name || me?.email || 'Student', author_role: 'student', member_ids: pitchStudentIds({ ...item, tagged_emails: emails.join(', ') }, users), member_emails: emails });
+    if (changeLabels.length) await base44.entities.Comment.create({ parent_type: 'pitch', parent_id: item.id, message: `Edited the pitch: ${changeLabels.join(', ')}.`, author_name: me?.full_name || me?.email || 'Student', author_role: 'student', member_ids: pitchStudentIds(saved, users), member_emails: saved.member_emails || [] });
     await reload();
   };
 

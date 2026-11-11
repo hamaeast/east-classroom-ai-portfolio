@@ -30,3 +30,8 @@ This repository was made from an export of the production Base44 app and then cl
 
 - Three lint errors that were already in the export (two unused imports and a reference to a lint rule that isn't configured) were fixed so `npm run lint` passes.
 - The makeup-credit generalization above changes behavior. It passes lint and builds, but it **has not been deployed or tested against a Base44 backend**.
+
+## Added after the first export
+
+- **2026-11-11 security update** (see [security-review.md](security-review.md)), merged from a new export of the live app and re-scanned for private details.
+- **An admin-only Usage Stats page** (`src/pages/UsageStats.jsx`). It shows aggregate totals only, with no names, emails, IDs or per-student rows, and hides any group smaller than 5 students.

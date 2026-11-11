@@ -5,7 +5,6 @@ import { showSubmissionRequirements } from '@/lib/submissionRequirements';
 import { reviewSecondGradeWriting, usesSecondGradeOnlyReview } from '@/lib/goalWritingCheck';
 import DictationButton from './DictationButton';
 import SpeakTextButton from './SpeakTextButton';
-import { lateMakeupPoints } from '@/lib/goalMakeups';
 import { isWeeklyGoalClosed } from '@/lib/gradingPeriods';
 
 
@@ -34,7 +33,7 @@ export default function WeeklyGoalForm({ record, reload, onComplete, recommendat
         review = { acceptable: true, suggestion: '' };
       }
       if (!review.acceptable) {
-        await base44.entities.WeeklyGoal.update(record.id, { goal_text: goal, ai_suggestion_used: true, ai_suggestion: review.suggestion });
+        await base44.functions.invoke('submitWeeklyGoal', { weeklyGoalId: record.id, kind: 'goal-suggestion', goalText: goal, aiSuggestion: review.suggestion });
         setSuggestion(review.suggestion);
         showSubmissionRequirements(review.suggestion || 'Revise your goal so it is clear and can be completed within one school week.');
         setSaving(false);
@@ -42,9 +41,7 @@ export default function WeeklyGoalForm({ record, reload, onComplete, recommendat
         return;
       }
     }
-    const submittedAt = new Date().toISOString();
-    await base44.entities.WeeklyGoal.update(record.id, { goal_text: goal, goal_submitted_at: submittedAt, goal_grade: lateMakeupPoints(record.goal_due_at, submittedAt, user) });
-    await base44.functions.invoke('awardWeeklyGoalGrade', { weeklyGoalId: record.id, phase: 'goal' });
+    await base44.functions.invoke('submitWeeklyGoal', { weeklyGoalId: record.id, kind: 'goal', goalText: goal });
     setSaving(false);
     await reload();
     onComplete?.();

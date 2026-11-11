@@ -37,6 +37,7 @@ const AdminManagement = lazyWithRecovery(() => import('@/pages/AdminManagement')
 const FacilitationReview = lazyWithRecovery(() => import('@/pages/FacilitationReview'));
 const FacilitationRecords = lazyWithRecovery(() => import('@/pages/FacilitationRecords'));
 const PGPBuildingGoalReport = lazyWithRecovery(() => import('@/pages/PGPBuildingGoalReport'));
+const UsageStats = lazyWithRecovery(() => import('@/pages/UsageStats'));
 
 const PageLoading = () => (
   <div className="flex items-center justify-center py-24">
@@ -101,6 +102,7 @@ const AuthenticatedApp = () => {
             <Route path="/facilitation-review" element={<FacilitationReview />} />
             <Route path="/facilitation-records" element={<FacilitationRecords />} />
             <Route path="/pgp-building-goal-report" element={<PGPBuildingGoalReport />} />
+            <Route path="/usage-stats" element={<UsageStats />} />
           </Route>
         </Route>
         <Route path="*" element={<PageNotFound />} />

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import useEntityList from '@/hooks/useEntityList';
 import { currentSchoolYearRange } from '@/lib/schoolYear';
-import { chicagoEndOfDay, chicagoToday, currentGoalWeekStart, isChicagoSchoolDay, isEnrollmentExemptWeek, suggestedReflectionDue } from '@/lib/weeklyGoals';
+import { chicagoToday, currentGoalWeekStart, isChicagoSchoolDay, isEnrollmentExemptWeek, suggestedReflectionDue } from '@/lib/weeklyGoals';
 import { isFullSchoolWeekClosed } from '@/lib/schoolCalendar';
 import { buildStudentRecommendationContext } from '@/lib/studentRecommendationContext';
 import WeeklyGoalForm from './WeeklyGoalForm';
@@ -43,9 +43,7 @@ export default function WeeklyGoalPopup({ student }) {
       const year = currentSchoolYearRange();
       const { data } = await base44.functions.invoke('ensureWeeklyGoalAssignments', { weekStart, goalDueDate: weekStart, reflectionDueDate: suggestedReflectionDue(weekStart).slice(0, 10), schoolYear: year.label });
       if (data.skipped || data.active === false) { setCreating(false); return; }
-      const assignmentData = { goal_assignment_id: data.goalAssignmentId, reflection_assignment_id: data.reflectionAssignmentId };
-      if (record) await base44.entities.WeeklyGoal.update(record.id, assignmentData);
-      else await base44.entities.WeeklyGoal.create({ student_id: student.id, week_start: weekStart, goal_due_at: chicagoEndOfDay(chicagoToday()), reflection_due_at: suggestedReflectionDue(weekStart), ...assignmentData });
+      // The function creates or links this week's goal record for the signed-in student.
       await reload(); setCreating(false);
     };
     setup();

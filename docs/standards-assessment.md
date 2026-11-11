@@ -60,6 +60,6 @@ Both read the student's records, but they are **separate AI calls with separate 
 - **Not validated:** placements are model judgments of the evidence the app could see. They are not validated measures of ability, and they haven't been checked against teacher ratings.
 - **Generous runs stick:** keeping the highest placement means one generous run stays on record, because a later lower result never replaces it.
 - **Default only in the prompt:** the K-2 Emerging default for thin evidence comes from the prompt, not from code.
-- **Students can write their own records:** database rules let a student create or update their own standards records directly, outside the teacher-run update. A fix is in progress; see [security-review.md](security-review.md).
+- **Students can write their own records:** database rules let a student create or update their own standards records directly, outside the teacher-run update. This was fixed on 2026-11-11: create and update are now admin-only (see [security-review.md](security-review.md)).
 - **Target text issues:** the target text contains a few typos and two duplicated cells, where two Emerging collaboration targets repeat ethical-problem-solving text. That text is sent to the model and shown to students.
 - **Unused toggle:** an availability toggle component exists but isn't wired into the app.

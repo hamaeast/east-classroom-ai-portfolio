@@ -7,27 +7,19 @@ export default function MyServiceHours({ entries, reload }) {
   const total = entries.filter(x => (x.approval_status || 'approved') === 'approved').reduce((s, x) => s + Number(x.hours || 0), 0);
   const sorted = entries.slice().sort((a, b) => new Date(b.service_date) - new Date(a.service_date));
   const [drafts, setDrafts] = useState({}), [messages, setMessages] = useState({}), [checking, setChecking] = useState('');
+  // The server re-checks the writing and always returns the entry to "pending" for the teacher.
   const save = async (entry) => {
     if (entry.weekly_check_in_id && isNineWeeksClosed(entry.service_date)) return;
     const draft = drafts[entry.id] || { hours: entry.hours, description: entry.description || '' };
-    if (entry.ai_retry_after && new Date(entry.ai_retry_after) > new Date()) {
-      setMessages(m => ({ ...m, [entry.id]: 'Please take time to plan your writing and try submitting again later.' })); return;
-    }
     setChecking(entry.id);
-    const result = await base44.integrations.Core.InvokeLLM({
-      prompt: `Check this community-service work description using a very lenient 2nd-grade reading/writing level. Short answers, typos, and simple grammar are fine. It is valid only if it meaningfully describes community-service work completed and is not blank, gibberish, or unrelated. Do not write the answer. Give one short suggestion if invalid.\n\nDescription: "${draft.description}"`,
-      response_json_schema: { type: 'object', properties: { valid: { type: 'boolean' }, hint: { type: 'string' } }, required: ['valid', 'hint'] },
-    });
-    setChecking('');
-    if (!result.valid) {
-      const attempts = (entry.ai_check_attempts || 0) + 1, locked = attempts >= 2;
-      await base44.entities.ServiceEntry.update(entry.id, { ai_check_attempts: locked ? 0 : attempts, ...(locked ? { ai_retry_after: new Date(Date.now() + 15 * 60 * 1000).toISOString() } : {}) });
-      setMessages(m => ({ ...m, [entry.id]: locked ? 'Please take time to plan your writing and try submitting again later.' : (result.hint || 'Please describe the community-service work you completed.') }));
-      await reload(); return;
+    try {
+      const { data } = await base44.functions.invoke('resubmitServiceHours', { entryId: entry.id, hours: Number(draft.hours), description: draft.description });
+      setMessages(m => ({ ...m, [entry.id]: data?.status === 'invalid' ? data.message : '' }));
+    } catch (error) {
+      setMessages(m => ({ ...m, [entry.id]: error?.response?.data?.error || 'Your changes could not be saved. Please try again.' }));
     }
-    await base44.entities.ServiceEntry.update(entry.id, { hours: Number(draft.hours), description: draft.description, approval_status: 'pending', admin_feedback: '', ai_check_attempts: 0 });
-    if (entry.weekly_check_in_id) await base44.entities.WeeklyCheckIn.update(entry.weekly_check_in_id, { hours: Number(draft.hours), accomplishment: draft.description });
-    setMessages(m => ({ ...m, [entry.id]: '' })); await reload();
+    setChecking('');
+    await reload();
   };
   return <div className="mt-6"><QuickPanel title={`My service hours — ${total.toFixed(1)} hrs this school year`}>
     {!sorted.length ? <p className="text-sm text-muted-foreground">No service hours logged yet.</p> : <div className="space-y-3">{sorted.map(x => x.approval_status === 'rejected' && !(x.weekly_check_in_id && isNineWeeksClosed(x.service_date)) ? <div key={x.id} className="rounded-xl border border-neon-magenta/50 bg-neon-magenta/10 p-4 text-sm">

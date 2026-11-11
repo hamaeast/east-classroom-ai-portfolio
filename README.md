@@ -19,7 +19,7 @@ A classroom web app for a junior-high **EAST** program. Students plan work with 
 5. **A real prompt in context:** [`WeeklyGoalForm.jsx`](src/components/east/WeeklyGoalForm.jsx) has the goal prompt and the one-clarification limit. [`CheckIns.jsx` line 215](src/pages/CheckIns.jsx#L215) has the two-round fallback and advisory evidence review.
 6. **Fewer AI calls through rules in code:** [docs/efficiency.md](docs/efficiency.md) quotes the specific code.
 7. **Grounding growth claims in records:** [`learningGrowthAnalysis.js`](src/lib/learningGrowthAnalysis.js) builds candidate cases in code before asking the model to judge them.
-8. **Security review:** [docs/security-review.md](docs/security-review.md) checks who can write grades, with findings, severity, and fix status.
+8. **Security review:** [docs/security-review.md](docs/security-review.md) checks who can write grades, and the server-side fixes applied on 2026-11-11.
 9. **Honest limits:** [docs/expected-ai-behavior.md](docs/expected-ai-behavior.md#known-limitations).
 10. **How I'd measure AI accuracy next:** [docs/evaluation-plan.md](docs/evaluation-plan.md). This is a plan, not results yet.
 

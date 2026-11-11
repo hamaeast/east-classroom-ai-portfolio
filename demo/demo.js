@@ -349,7 +349,7 @@
           h('li', { class: 'small' }, 'Results appear to students as soon as they are saved. There is no approval step, and placements can\'t be edited by hand in the app.'),
           h('li', { class: 'small' }, 'The teacher freezes each nine-weeks standards grade into the gradebook and uses reports such as "below 70" and "below grade level." When a student is placed above their band three runs in a row, teachers see "Teacher review ready." That label is information only.'),
           h('li', { class: 'small' }, 'Placements are model judgments of the evidence the app could see. They are not validated measures of ability, and keeping the highest placement means one generous run stays on record.'),
-          h('li', { class: 'small' }, 'Known gap, fix in progress: database rules let a student create or update their own standards records directly (see docs/security-review.md).'))),
+          h('li', { class: 'small' }, 'Fixed 2026-11-11: standards records can now be written only by the teacher (see docs/security-review.md).'))),
     ];
   }
 

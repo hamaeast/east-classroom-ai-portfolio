@@ -271,57 +271,44 @@ ${recommendationContext}`,
     if (submittingRef.current) return;
     submittingRef.current = true;
     setSubmitting(true);
-    const hours = Number(form.hours);
-    const submittedAt = new Date().toISOString();
-    const editingEntry = items.find(item => item.id === editingId);
-    const originalSubmittedAt = editingEntry?.original_submitted_at || editingEntry?.created_date || submittedAt;
-    const effectiveWeekEnding = normalizedCheckInWeekEnding({ week_ending: targetWeekEnding, original_submitted_at: originalSubmittedAt });
-    const suggestedPoints = suggestedCheckInPoints({ week_ending: effectiveWeekEnding, original_submitted_at: originalSubmittedAt }, me);
-    const alreadyFulfilled = items.some(item => item.created_by_id === me?.id && item.approval_status !== 'rejected' && !['duplicate', 'extra'].includes(item.grade_status) && normalizedCheckInWeekEnding(item) === effectiveWeekEnding && item.id !== editingId);
-    const isExcusedWeek = exemptions.some(item => weekEndingFriday(item.week_ending) === effectiveWeekEnding) || dismissals.some(item => item.student_id === me?.id && weekEndingFriday(item.week_ending) === effectiveWeekEnding);
-    const lateSubmission = !alreadyFulfilled && !isExcusedWeek && suggestedPoints < 10;
-    const returnedEntry = !editingId && selectedWeekIsMissing ? items.find(item => item.created_by_id === me?.id && item.approval_status === 'rejected' && normalizedCheckInWeekEnding(item) === effectiveWeekEnding) : null;
-    const existingEntry = editingEntry || returnedEntry;
-    const targetId = existingEntry?.id;
-    const authoritativeSubmittedAt = existingEntry?.original_submitted_at || existingEntry?.created_date || originalSubmittedAt;
-    const gradeEligible = isCheckInGradeEligible({ week_ending: effectiveWeekEnding, original_submitted_at: authoritativeSubmittedAt }, me);
-    const gradeWeekEnding = effectiveWeekEnding;
-    const existingWeeklyGrade = items.some(item => item.created_by_id === me?.id && normalizedCheckInWeekEnding(item) === gradeWeekEnding && item.id !== targetId && item.approval_status !== 'rejected' && !['duplicate', 'extra'].includes(item.grade_status));
-    const needsGradeReview = lateSubmission || !gradeEligible;
-    const extra = !isAdmin && !existingEntry && !selectedWeekIsMissing && !currentWeekIsDue;
-    const grade_status = existingEntry?.grade_status === 'reviewed' ? 'reviewed' : extra ? 'extra' : existingWeeklyGrade ? 'duplicate' : needsGradeReview ? 'pending_review' : 'auto';
-    const gradeValue = grade_status === 'extra' || grade_status === 'duplicate' ? undefined : grade_status === 'reviewed' ? existingEntry.grade : suggestedPoints;
-    const selectedPitch = pitches.find(pitch => pitch.id === form.project_pitch_id);
-    const memberIds = [...new Set([me?.id, ...(selectedPitch?.member_ids || [])].filter(Boolean))];
-    const memberEmails = [...new Set([me?.email?.toLowerCase(), ...(selectedPitch?.member_emails || [])].filter(Boolean))];
-    const approvalStatus = grade_status === 'extra' ? 'approved' : editingId || needsGradeReview ? 'pending' : 'approved';
-    const changes = { ...form, week_ending: effectiveWeekEnding, member_ids: memberIds, member_emails: memberEmails, late_reason: lateReason, evidence_links: links, evidence_files: files, evidence_analysis: evidenceAnalysis, hours, hourly_value: MIN_WAGE, confidence: Number(form.confidence), is_late: lateSubmission, is_backdated: status.isBackdated, approval_status: approvalStatus, ai_review_flag: bypassAi && gradeEligible, grade: gradeValue, grade_status, original_submitted_at: authoritativeSubmittedAt };
-    let checkIn;
+    let saved;
     try {
-      if (targetId) checkIn = await base44.entities.WeeklyCheckIn.update(targetId, changes);
-      else checkIn = await base44.entities.WeeklyCheckIn.create(changes);
-      const savedCheckIn = await base44.entities.WeeklyCheckIn.get(checkIn.id);
-      const answerFields = ['accomplishment', 'next_step', 'blocker', 'help_needed'];
-      const answersSaved = answerFields.every(field => String(savedCheckIn?.[field] || '').trim() === String(changes[field] || '').trim());
-      if (!answersSaved) throw new Error('The written answers were not confirmed after saving.');
-      checkIn = savedCheckIn;
-      if (targetId) setEditingId(null);
-    } catch {
+      const response = await base44.functions.invoke('submitWeeklyCheckIn', {
+        checkInId: editingId || '',
+        weekEnding: targetWeekEnding,
+        project_title: form.project_title,
+        student_names: form.student_names,
+        partner_name: form.partner_name,
+        project_pitch_id: form.project_pitch_id,
+        hours: form.hours,
+        accomplishment: form.accomplishment,
+        next_step: form.next_step,
+        blocker: form.blocker,
+        help_needed: form.help_needed,
+        confidence: form.confidence,
+        late_reason: lateReason,
+        evidence_links: links,
+        evidence_files: files,
+        evidence_analysis: evidenceAnalysis,
+        aiFallbackUsed: bypassAi,
+      });
+      saved = response.data || {};
+    } catch (error) {
       submittingRef.current = false;
       setSubmitting(false);
-      setSubmissionNotice('Your check-in was not confirmed as saved. Your answers are still here—please submit again.');
+      setSubmissionNotice(error?.response?.data?.error || 'Your check-in was not confirmed as saved. Your answers are still here—please submit again.');
       return;
     }
-    if (approvalStatus === 'approved') {
-      const serviceEntries = await base44.entities.ServiceEntry.filter({ weekly_check_in_id: checkIn.id });
-      const serviceChanges = { project_title: form.project_title, project_pitch_id: form.project_pitch_id, student_names: me?.full_name || form.student_names, student_emails: me?.email || '', member_ids: [me.id], member_emails: [me.email.toLowerCase()], partner_name: form.partner_name, service_date: effectiveWeekEnding, hours, hourly_value: MIN_WAGE, description: form.accomplishment, weekly_check_in_id: checkIn.id };
-      if (serviceEntries.length) await base44.entities.ServiceEntry.update(serviceEntries[0].id, serviceChanges);
-      else await base44.entities.ServiceEntry.create(serviceChanges);
-    }
-    const remainingMissingCount = Math.max(0, missingWeeks.length - (selectedWeekIsMissing && !alreadyFulfilled && !isExcusedWeek ? 1 : 0));
+    if (editingId) setEditingId(null);
+    // The server decides the grade, status and linked service hours; the notice below
+    // only describes what it saved.
+    const effectiveWeekEnding = saved.effectiveWeekEnding || targetWeekEnding;
+    const grade_status = saved.gradeStatus;
+    const approvalStatus = saved.approvalStatus;
+    const remainingMissingCount = isAdmin ? 0 : Math.max(0, missingWeeks.length - (selectedWeekIsMissing ? 1 : 0));
     const remainingNotice = remainingMissingCount > 0 ? ` ${remainingMissingCount} missing check-in${remainingMissingCount === 1 ? '' : 's'} remaining.` : '';
     const notice = grade_status === 'extra'
-      ? `Check-in saved for ${effectiveWeekEnding} as an extra. It does not count toward a grade${isUnreleasedCheckIn(effectiveWeekEnding, new Date(submittedAt)) ? " because this week's assignment releases Thursday" : ' because no required check-in is currently due'}.${remainingNotice}`
+      ? `Check-in saved for ${effectiveWeekEnding} as an extra. It does not count toward a grade${isUnreleasedCheckIn(effectiveWeekEnding, new Date()) ? " because this week's assignment releases Thursday" : ' because no required check-in is currently due'}.${remainingNotice}`
       : grade_status === 'duplicate'
       ? `Check-in submitted successfully for ${effectiveWeekEnding}. A check-in for that week was already on file, so this copy will not count twice.${remainingNotice}`
       : approvalStatus === 'pending'

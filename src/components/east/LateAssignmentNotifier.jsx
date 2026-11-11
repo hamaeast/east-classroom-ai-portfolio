@@ -20,7 +20,7 @@ export default function LateAssignmentNotifier({ studentId }) {
   const close = async viewAssignments => {
     setSaving(true); setError('');
     try {
-      await base44.entities.AssignmentReminder.bulkUpdate(unread.map(item => ({ id: item.id, read: true })));
+      await base44.functions.invoke('markAssignmentRemindersRead', { reminderIds: unread.map(item => item.id) });
       await reload();
       if (viewAssignments) navigate('/assignments');
     } catch { setError('The notification could not be dismissed.'); setSaving(false); }

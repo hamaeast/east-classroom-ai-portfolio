@@ -28,12 +28,7 @@ export default function CartMakeupForm({ record, phase, reload }) {
       setSaving(false);
       return;
     }
-    const submittedAt = new Date().toISOString();
-    const data = phase === 'goal'
-      ? { cart_goal_answer: answer, cart_goal_submitted_at: submittedAt, goal_submitted_at: submittedAt, goal_grade: 4 }
-      : { cart_reflection_answer: answer, cart_reflection_submitted_at: submittedAt, reflection_submitted_at: submittedAt, reflection_grade: 4 };
-    await base44.entities.WeeklyGoal.update(record.id, data);
-    await base44.functions.invoke('awardWeeklyGoalGrade', { weeklyGoalId: record.id, phase });
+    await base44.functions.invoke('submitWeeklyGoal', { weeklyGoalId: record.id, kind: phase === 'goal' ? 'cart-goal' : 'cart-reflection', answer });
     setSaving(false);
     await reload();
   };
