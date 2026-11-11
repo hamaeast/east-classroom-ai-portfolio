@@ -6,20 +6,21 @@ A classroom web app for a junior-high **EAST** program. Students plan work with 
 
 > **Built in July 2026, launched in August 2026, and in daily classroom use by 100 students.** The real app holds student work, grades, and names, so it can't be shown publicly. This repository is a cleaned copy of its source code, plus a **separate demo with fictional students** so you can see how it works without exposing any student data. The demo is not connected to the real app.
 
-**[Open the live demo](https://hamaeast.github.io/east-classroom-ai-portfolio/)**: fictional data, prerecorded AI responses, no sign-in. It covers six workflows: weekly goals, check-ins, rubric scoring, makeup tutorials, the student learning summary, and teacher review.
+**[Open the live demo](https://hamaeast.github.io/east-classroom-ai-portfolio/)**: fictional data, prerecorded AI responses, no sign-in. It covers seven workflows: weekly goals, check-ins, rubric scoring, makeup tutorials, the student learning summary, the **standards assessment**, and teacher review.
 
 ![Animated walkthrough of the demo: goal review, check-in fallback, teacher review](docs/walkthrough.gif)
 
 ### For reviewers: a 5-minute tour
 
-1. **See it:** click through the [live demo](https://hamaeast.github.io/east-classroom-ai-portfolio/), or watch the walkthrough above (about 30 seconds, nine screens).
-2. **How AI is used and constrained:** [docs/ai-design.md](docs/ai-design.md). Read the table that separates protections enforced in code from prompt instructions.
-3. **How the design changed with real students:** [docs/iterations.md](docs/iterations.md).
-4. **A real prompt in context:** [`WeeklyGoalForm.jsx`](src/components/east/WeeklyGoalForm.jsx) has the goal prompt and the one-clarification limit. [`CheckIns.jsx` line 215](src/pages/CheckIns.jsx#L215) has the two-round fallback and advisory evidence review.
-5. **Fewer AI calls through rules in code:** [docs/efficiency.md](docs/efficiency.md) quotes the specific code.
-6. **Grounding growth claims in records:** [`learningGrowthAnalysis.js`](src/lib/learningGrowthAnalysis.js) builds candidate cases in code before asking the model to judge them.
-7. **Honest limits:** [docs/expected-ai-behavior.md](docs/expected-ai-behavior.md#known-limitations).
-8. **How I'd measure AI accuracy next:** [docs/evaluation-plan.md](docs/evaluation-plan.md). This is a plan, not results yet.
+1. **See it:** click through the [live demo](https://hamaeast.github.io/east-classroom-ai-portfolio/), or watch the walkthrough above (about 40 seconds, eleven screens).
+2. **Standards-based learning evidence:** [docs/standards-assessment.md](docs/standards-assessment.md) shows how records become placements and a rule-based grade.
+3. **How AI is used and constrained:** [docs/ai-design.md](docs/ai-design.md). Read the table that separates protections enforced in code from prompt instructions.
+4. **How the design changed with real students:** [docs/iterations.md](docs/iterations.md).
+5. **A real prompt in context:** [`WeeklyGoalForm.jsx`](src/components/east/WeeklyGoalForm.jsx) has the goal prompt and the one-clarification limit. [`CheckIns.jsx` line 215](src/pages/CheckIns.jsx#L215) has the two-round fallback and advisory evidence review.
+6. **Fewer AI calls through rules in code:** [docs/efficiency.md](docs/efficiency.md) quotes the specific code.
+7. **Grounding growth claims in records:** [`learningGrowthAnalysis.js`](src/lib/learningGrowthAnalysis.js) builds candidate cases in code before asking the model to judge them.
+8. **Honest limits:** [docs/expected-ai-behavior.md](docs/expected-ai-behavior.md#known-limitations).
+9. **How I'd measure AI accuracy next:** [docs/evaluation-plan.md](docs/evaluation-plan.md). This is a plan, not results yet.
 
 > **How student data was protected:** No real student records were copied. A student's name and email, the school and district names, a classroom photo folder, and other private links were removed from the code and replaced with settings or placeholders. Every student in the demo and screenshots is made up. Details: [docs/public-copy-notes.md](docs/public-copy-notes.md).
 
@@ -61,6 +62,25 @@ EAST is project-based. Students pick community or technology projects and work o
 | Makeups for closed weeks | Write a step-by-step tutorial; AI scores it against a short rubric | Override the score or return it; open a makeup window for an individual student |
 | Learning evidence | n/a | AI-assisted standards, writing-growth and learning-growth reports built from dated records |
 
+## Featured: standards-based learning evidence
+
+Students' grades in the standards portion come from **7 EAST standards**, each with "I can" targets at four grade bands and three levels. Assignment completion alone doesn't set them. The app collects each student's own work from across the dashboard, including goals, reflections, check-ins with evidence reviews, pitches, comments, tasks, and reading and Do Now answers. It asks the model to place the student on each standard, with a band, a level, an evidence explanation, and a next step with two concrete examples.
+
+From there, **code takes over**. It keeps the highest placement ever recorded and saves a history step only when a placement rises. It then converts placements to a 20-point nine-weeks score with a fixed rule, which the teacher freezes into the gradebook.
+
+| | |
+|-|-|
+| **Evidence → placement** | AI, guided by the targets and strict evidence rules in the prompt. When evidence is too thin, the prompt asks for K-2 Emerging and "Not enough dashboard evidence yet." |
+| **Placement → grade** | Code only: rank ÷ enrolled-band Mastery, capped at 1, averaged over the strongest 2/3/4/7 standards for Nine Weeks 1–4 |
+| **Not the same as the learning summary** | Both read student records, but the standards assessment doesn't use or score the narrative summary |
+| **Honest limits** | Placements are model judgments, not validated measures of ability. Results show to students without an approval step, and there's no manual override |
+
+Walk through one standard, from source evidence to placement, next step, history and grade, in the demo's **[Standards & evidence tab](https://hamaeast.github.io/east-classroom-ai-portfolio/#standards)**. Full write-up: **[docs/standards-assessment.md](docs/standards-assessment.md)**.
+
+| Standards walkthrough (one fictional student, one standard) |
+|-|
+| ![Standards assessment walkthrough](docs/screenshots/standards.png) |
+
 ## AI design in brief
 
 Full detail: **[docs/ai-design.md](docs/ai-design.md)**. Expected behavior and limitations: **[docs/expected-ai-behavior.md](docs/expected-ai-behavior.md)**. How the design changed over time: **[docs/iterations.md](docs/iterations.md)**.
@@ -85,7 +105,8 @@ The `demo/` folder is a small static page with fictional data. It shows the stud
 5. **rubric scoring** of a reading response: multiple choice and keyword questions scored in code, an open answer scored by AI against the teacher's rubric, and a sketch left for the teacher. Samples include an answer that tries to trick the grader (the code clamps the score) and an AI outage (the work goes to the teacher)
 6. **makeup tutorials** for missed check-ins, scored on a 0–5 rubric, or 0–10 when the teacher allows full credit; a blank attempt is returned without a grade
 7. **the student learning summary**, for a student with several weeks of records and for one with almost none ("Not enough dashboard evidence yet")
-8. **the teacher review queue**, where AI output sits next to the student's own words
+8. **the standards assessment**: one standard traced from source records through placement, explanation, next step, keep-highest storage, history, and the rule-based nine-weeks grade
+9. **the teacher review queue**, where AI output sits next to the student's own words
 
 ```bash
 cd demo && python3 -m http.server 8765

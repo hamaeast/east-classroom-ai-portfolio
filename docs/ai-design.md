@@ -24,7 +24,8 @@ How the app uses AI, what the prompts ask for, and which protections actually co
 | Learning growth | `src/lib/learningGrowthAnalysis.js` | entries keyed by `case_id`, enum status | Teacher-facing growth evidence |
 | Writing growth | `src/lib/writingGrowthAnalysis.js` | portfolio per student, enum status | Teacher-facing writing portfolio |
 | Student learning summary | `src/components/east/LearningSummaryView.jsx` + `src/lib/studentSummaryContext.js` | markdown text | Short summary for the student and teacher |
-| Standards, skills, service hours, quick assignment import | various | JSON | Teacher tools |
+| Standards assessment | `src/lib/standardsAssessment.js`, `AdminStandardsUpdate.jsx` | per-standard `{grade_band, level, evidence_summary}` | Placements on 7 EAST standards; code keeps the highest and computes the grade. See [standards-assessment.md](standards-assessment.md) |
+| Skills, service hours, quick assignment import | various | JSON | Teacher tools |
 
 ## How prompts use evidence and rubrics
 
