@@ -4,6 +4,8 @@ A classroom web app for a junior-high **EAST** program. Students plan work with 
 
 **Designed by Aspen Ham, EAST facilitator.** Built on [Base44](https://base44.com) with AI-assisted development (see [My role](#my-role)).
 
+**[Open the live demo](https://hamaeast.github.io/east-classroom-ai-portfolio/)**: fictional data, prerecorded AI responses, no sign-in.
+
 > This repository is a **sanitized public copy** for portfolio review. It is not connected to the live classroom app. Student names, school details, and private links have been removed (see [docs/public-copy-notes.md](docs/public-copy-notes.md)).
 
 | Unclear goal gets one clarifying question | Check-in fallback after two AI suggestions | Teacher review queue |
@@ -52,6 +54,8 @@ Full detail: **[docs/ai-design.md](docs/ai-design.md)**. Expected behavior and l
 - **Prompts are instructions, not guarantees.** Rules such as "don't write it for the student" or "don't claim causation" are written into prompts but can't be enforced in code. The docs say which protections are which.
 
 ## Try the demo (no account, no AI costs)
+
+**Live demo: <https://hamaeast.github.io/east-classroom-ai-portfolio/>**. The same static files are served from the `gh-pages` branch.
 
 The `demo/` folder is a small static page with fictional data. It shows the student flow and the teacher review flow, including:
 
