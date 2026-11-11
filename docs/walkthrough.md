@@ -1,6 +1,6 @@
 # Walkthrough (about 3 minutes)
 
-No video is included yet. Use this outline to record one from the demo (`cd demo && python3 -m http.server 8765`, then open <http://127.0.0.1:8765>). Click **Reset** before each section.
+A silent animated walkthrough of the six demo states is at [walkthrough.gif](walkthrough.gif). No narrated video is included yet. Use this outline to record one from the demo (`cd demo && python3 -m http.server 8765`, then open <http://127.0.0.1:8765>). Click **Reset** before each section.
 
 | Time | Screen | Do | Say |
 |-|-|-|-|

@@ -6,6 +6,17 @@ A classroom web app for a junior-high **EAST** program. Students plan work with 
 
 **[Open the live demo](https://hamaeast.github.io/east-classroom-ai-portfolio/)**: fictional data, prerecorded AI responses, no sign-in.
 
+![Animated walkthrough of the demo: goal review, check-in fallback, teacher review](docs/walkthrough.gif)
+
+### For reviewers: a 5-minute tour
+
+1. **See it:** click through the [live demo](https://hamaeast.github.io/east-classroom-ai-portfolio/), or watch the walkthrough above (about 20 seconds).
+2. **How AI is used and constrained:** [docs/ai-design.md](docs/ai-design.md). Read the table that separates protections enforced in code from prompt instructions.
+3. **How the design changed with real students:** [docs/iterations.md](docs/iterations.md).
+4. **A real prompt in context:** [`WeeklyGoalForm.jsx`](src/components/east/WeeklyGoalForm.jsx) has the goal prompt and the one-clarification limit. [`CheckIns.jsx` line 215](src/pages/CheckIns.jsx#L215) has the two-round fallback and advisory evidence review.
+5. **Grounding growth claims in records:** [`learningGrowthAnalysis.js`](src/lib/learningGrowthAnalysis.js) builds candidate cases in code before asking the model to judge them.
+6. **Honest limits:** [docs/expected-ai-behavior.md](docs/expected-ai-behavior.md#known-limitations).
+
 > This repository is a **sanitized public copy** for portfolio review. It is not connected to the live classroom app. Student names, school details, and private links have been removed (see [docs/public-copy-notes.md](docs/public-copy-notes.md)).
 
 | Unclear goal gets one clarifying question | Check-in fallback after two AI suggestions | Teacher review queue |
