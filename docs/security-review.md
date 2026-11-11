@@ -2,7 +2,7 @@
 
 I reviewed the data access rules (Base44 row-level security) for every record that holds a grade, score or approval status. I found that several grade fields were calculated in the browser and saved with the student's own permissions. That means a student who knew how to call the API could have changed them.
 
-**The fixes were applied to the live app on 2026-11-11 through Base44.** This repository was updated from that export. I reviewed the exported code before merging it: the access-rule changes, the new server functions, and the frontend calls.
+**The fixes were applied to the live app on 2026-11-11 through Base44.** This repository was updated from that export. I reviewed the exported code before merging it: the access-rule changes, the new server functions, and the frontend calls. After the update, I confirmed the live app is working normally.
 
 ## Findings
 
@@ -24,4 +24,4 @@ The server-side calculations use shared code in `base44/shared/checkInScoring.ts
 
 ## Not re-tested here
 
-- I can't run Base44 functions from this repository. The fixes build and lint, and I reviewed the code by reading it. Runtime testing happens in the live app, not here.
+- I can't run Base44 functions from this repository. The fixes build and lint, and I reviewed the code by reading it. Runtime behavior was confirmed in the live app after deployment, not from this repository.
