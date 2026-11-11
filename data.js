@@ -134,6 +134,55 @@ window.DemoData = {
     },
   },
 
+  // ---- Standards assessment (mirrors src/lib/standardsAssessment.js etc.) ----
+  standards: {
+    student: 'Maya R. (sample)', grade: 8, enrolledBand: '7-8', segment: 2,
+    standardKey: 'self_directed', standardName: 'Take responsibility for self-directed learning',
+    // Real target text for this standard, from src/lib/eastStandards.js (7-8 band)
+    targets78: { Emerging: 'I can set goals with support and manage parts of a project on my own.', Proficient: 'I can plan and complete authentic projects that meet community needs.', Mastery: 'I model initiative, help organize my team, and take responsibility for my learning.' },
+    sources: [
+      { type: 'WeeklyGoal', date: 'Oct 5', text: 'Goal: "test the moisture sensor in two garden beds and write down the readings"' },
+      { type: 'Goal reflection', date: 'Oct 9', text: 'Met goal: yes. "The second sensor reads lower in the shady bed. Next I will check it against a store meter."' },
+      { type: 'WeeklyCheckIn', date: 'Oct 9', text: 'Accomplished: "The garden club asked which beds need more water, so I planned tests for both beds and made a testing schedule for my team." Evidence: public sheet of readings (evidence review: accessible, 12 dated readings)' },
+      { type: 'TaskRequest', date: 'Oct 14', text: '"Borrow the soldering kit Thursday to finish the second sensor."' },
+      { type: 'Comment (teacher)', date: 'Oct 9', text: '"Nice plan. Share it with the club." (Adult feedback; the prompt says it cannot earn a level by itself.)' },
+    ],
+    promptExcerpt: 'Score demonstrated evidence, never potential or enrolled grade. … choose the highest grade band and proficiency level fully supported by the dashboard evidence … never require sequential progression … Emerging placement in the student\'s enrolled grade band is attainable with two clear, specific pieces of evidence … or one well-documented artifact … Proficient and Mastery require stronger quality, independence, and repeated evidence. … When evidence for a standard is missing or too limited, return K-2 Emerging and make the evidence summary begin with "Not enough dashboard evidence yet." … never awarding a level merely because text exists or because an adult wrote feedback … Treat public evidence analysis as corroboration … not proof … Below Mastery, include "Next step:" with one improvement suggestion and "Examples:" with exactly two numbered, concrete examples … Never invent completed work.\n\n[CART evidence lens, all 84 "I can" targets for every band, and the student\'s records are appended here. Shortened for the demo.]',
+    stored: { standard_key: 'self_directed', assessed_grade_band: '7-8', level: 'Emerging', evidence_summary: 'Set and finished a weekly goal with a teacher check-in (Sep 21 goal and reflection). Next step: …' },
+    scenarios: {
+      growth: {
+        label: 'New evidence supports a higher placement',
+        ai: { grade_band: '7-8', level: 'Proficient', evidence_summary: 'Planned sensor tests for two beds in response to a garden club question, set her own goal, and recorded 12 dated readings (Oct 5 goal, Oct 9 reflection and check-in). Next step: Show the results meeting the community need. Examples: 1. Share a one-page summary of the readings with the garden club. 2. Record which bed the club decides to water more and why.' },
+      },
+      lower: {
+        label: 'New run returns a lower placement',
+        ai: { grade_band: '3-6', level: 'Mastery', evidence_summary: 'Supports team goals by sharing a testing schedule. Next step: …' },
+      },
+      thin: {
+        label: 'Different student, too little evidence',
+        student: 'Sam K. (sample)', sources: [{ type: 'WeeklyCheckIn', date: 'Oct 9', text: 'Accomplished: "worked on project"' }],
+        ai: { grade_band: 'K-2', level: 'Emerging', evidence_summary: 'Not enough dashboard evidence yet. Next step: Record what you planned and finished each week. Examples: 1. Write a weekly goal that names one task. 2. Link a photo of the finished task in your check-in.' },
+      },
+    },
+    history: [
+      { date: 'Sep 18', band: 'K-2', level: 'Emerging', note: 'First run, few records: default placement' },
+      { date: 'Sep 25', band: '7-8', level: 'Emerging', note: 'New high' },
+      { date: 'Oct 16', band: '7-8', level: 'Proficient', note: 'New high (this walkthrough)' },
+      { date: 'Oct 23', band: '7-8', level: 'Proficient', note: 'Checked; no higher placement, so no new record' },
+    ],
+    // Maya's current placements on all seven standards (fictional)
+    allResults: [
+      { standard_key: 'self_directed', assessed_grade_band: '7-8', level: 'Proficient' },
+      { standard_key: 'ethical_problem_solving', assessed_grade_band: '7-8', level: 'Emerging' },
+      { standard_key: 'collaboration', assessed_grade_band: '7-8', level: 'Emerging' },
+      { standard_key: 'research', assessed_grade_band: '3-6', level: 'Mastery' },
+      { standard_key: 'communication', assessed_grade_band: '3-6', level: 'Proficient' },
+      { standard_key: 'technology', assessed_grade_band: '7-8', level: 'Emerging' },
+      { standard_key: 'confidence', assessed_grade_band: '3-6', level: 'Mastery' },
+    ],
+    names: { self_directed: 'Self-directed learning', ethical_problem_solving: 'Ethical problem solving', collaboration: 'Collaboration', research: 'Research', communication: 'Communication', technology: 'Emerging technology', confidence: 'Confidence' },
+  },
+
   // Sample records already waiting in the teacher review queue.
   teacherQueue: [
     {

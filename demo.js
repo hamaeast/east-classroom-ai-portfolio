@@ -14,7 +14,7 @@
       else if (v === true) el.setAttribute(k, '');
       else if (v !== false && v != null) el.setAttribute(k, v);
     }
-    for (const kid of kids.flat()) if (kid != null && kid !== false) el.append(kid.nodeType ? kid : String(kid));
+    for (const kid of kids.flat(Infinity)) if (kid != null && kid !== false) el.append(kid.nodeType ? kid : String(kid));
     return el;
   }
   const fill = (tpl, vars) => tpl.replace(/\{\{(\w+)\}\}/g, (_, k) => vars[k] ?? '');
@@ -293,13 +293,73 @@
     ];
   }
 
+  // ======================= 6. Standards assessment =======================
+  extra.standards = 'growth';
+  function standardsView() {
+    const S = D.standards;
+    const sc = S.scenarios[extra.standards];
+    const thin = extra.standards === 'thin';
+    const generated = [{ standard_key: S.standardKey, assessed_grade_band: sc.ai.grade_band, level: sc.ai.level, evidence_summary: sc.ai.evidence_summary }];
+    const current = thin ? null : { results: [S.stored] };
+    const kept = P.preserveHighestResults(generated, current)[0];
+    const growth = P.hasPositionGrowth([kept], current);
+    const results = S.allResults.map(r => r.standard_key === S.standardKey && !thin ? { ...r, assessed_grade_band: kept.assessed_grade_band, level: kept.level } : r);
+    const grade = P.standardsNineWeeksPoints({ results }, S.grade, S.segment);
+    const step = (n, title, ...body) => h('div', { class: 'qcard' }, h('h3', {}, `${n}. ${title}`), ...body);
+    const placement = r => `${r.assessed_grade_band || r.grade_band} ${r.level}`;
+    return [
+      h('section', { class: 'panel' },
+        h('div', { class: 'row' }, h('h2', {}, 'Standards assessment: from student records to a grade'), h('span', { class: 'badge by-ai' }, 'AI places · code stores and grades')),
+        h('p', { class: 'small' }, 'EAST grades students on 7 standards. Each standard has "I can" targets for four grade bands (K-2, 3-6, 7-8, 9-12) at three levels (Emerging, Proficient, Mastery). A placement is a grade band plus a level, so a student can show work above or below their enrolled band. This walkthrough follows one standard for one fictional 8th grader.'),
+        h('div', { class: 'row sample-btns' }, h('span', { class: 'small muted' }, 'Try a scenario:'),
+          Object.entries(S.scenarios).map(([k, x]) => h('button', { class: extra.standards === k ? 'on' : '', onclick: () => { extra.standards = k; render(); } }, x.label))),
+        step(1, `Source evidence: ${thin ? sc.student : S.student} · ${S.standardName}`,
+          h('p', { class: 'small muted' }, 'The app gathers the student\'s own records from across the dashboard, including team-tagged work: goals, reflections, check-ins with evidence reviews, pitches, comments, tasks, Do Now and reading answers, skills, and service hours. Sample records:'),
+          h('ul', { class: 'hints' }, (thin ? sc.sources : S.sources).map(x => h('li', { class: 'small' }, h('b', {}, `${x.date} · ${x.type}: `), x.text)))),
+        step(2, 'Compared against the EAST targets',
+          h('p', { class: 'small muted' }, `The prompt includes all 84 targets for every band. The 7-8 targets for this standard:`),
+          h('ul', { class: 'hints' }, Object.entries(S.targets78).map(([lvl, t]) => h('li', { class: 'small' }, h('b', {}, `7-8 ${lvl}: `), t))),
+          h('details', {}, h('summary', { class: 'small' }, 'Key prompt instructions (real wording, shortened)'), h('pre', {}, S.promptExcerpt))),
+        step(3, 'Placement, explanation and next step',
+          h('div', { class: 'sim' }, h('span', { class: 'tag' }, 'Simulated AI response'), ' Prerecorded for this demo. The live app requires JSON with grade_band and level from fixed lists for each of the 7 standards.',
+            h('pre', {}, JSON.stringify({ [S.standardKey]: sc.ai }, null, 2))),
+          thin ? h('p', { class: 'status warn small' }, 'With too little evidence, the prompt asks for a default of K-2 Emerging and an explanation starting "Not enough dashboard evidence yet." This default comes from the prompt; code doesn\'t enforce it.') : null),
+        step(4, 'Keep the highest placement',
+          thin ? h('p', { class: 'small' }, 'No earlier record, so this becomes the first record.') : [
+            h('p', { class: 'small' }, h('b', {}, 'Stored before this run: '), placement(S.stored), ' · ', h('b', {}, 'This run: '), placement(generated[0])),
+            h('div', { class: growth ? 'status ok' : 'status warn' }, growth
+              ? `Higher, so a new history record is saved with ${placement(kept)} and the new explanation.`
+              : `Lower, so the stored ${placement(kept)} and its old explanation are kept. No new record is saved; only last_checked_at changes. This run's explanation is discarded.`)],
+          h('p', { class: 'where' }, 'Mirrors preserveHighestResults and hasPositionGrowth in src/lib/standardsProgress.js (enforced in code).')),
+        thin ? h('div', { class: 'status warn' }, 'Steps 5 and 6 follow Maya. For Sam, K-2 Emerging has rank 1, worth 1 ÷ 9 = 0.11 credit if it is among the standards counted for his grade.') : step(5, 'Progression history (sample)',
+          h('ul', { class: 'hints' }, S.history.map(x => h('li', { class: 'small' }, h('b', {}, `${x.date}: ${x.band} ${x.level}`), ` · ${x.note}`)))),
+        thin ? null : step(6, `Rule-based grade for Nine Weeks ${S.segment} (no AI)`,
+          h('p', { class: 'small' }, `Each placement gets a rank: band start (K-2 0, 3-6 3, 7-8 6, 9-12 9) plus level (Emerging 1, Proficient 2, Mastery 3). Credit = min(1, rank ÷ enrolled-band Mastery). For grade 8 that's 9. Nine Weeks ${S.segment} averages the strongest ${grade.count} standards and scales to 20 points.`),
+          h('table', { class: 'gradetable' }, h('tr', {}, h('th', {}, 'Standard'), h('th', {}, 'Placement'), h('th', {}, 'Rank'), h('th', {}, 'Credit'), h('th', {}, 'Used')),
+            results.map(r => { const u = grade.used.find(x => x.key === r.standard_key); const rank = { 'K-2': 0, '3-6': 3, '7-8': 6, '9-12': 9 }[r.assessed_grade_band] + { Emerging: 1, Proficient: 2, Mastery: 3 }[r.level];
+              return h('tr', { class: u ? 'used' : '' }, h('td', {}, S.names[r.standard_key]), h('td', {}, placement(r)), h('td', {}, rank), h('td', {}, Math.min(1, rank / 9).toFixed(2)), h('td', {}, u ? 'yes' : '')); })),
+          h('div', { class: 'status ok' }, h('b', {}, `${grade.points} / 20 points (${Math.round(grade.points * 5)}%). `), `(${grade.used.map(u => u.credit.toFixed(3)).join(' + ')}) ÷ ${grade.count} × 20, rounded to one decimal.`),
+          h('p', { class: 'where' }, 'Mirrors src/lib/standardsGrade.js and base44/shared/standardsGrade.ts. The teacher freezes the score into the gradebook at the end of each nine weeks.'))),
+      h('section', { class: 'panel' },
+        h('h2', {}, 'How this differs from the learning summary'),
+        h('p', { class: 'small' }, 'Both read the student\'s records, but they are separate AI calls. The standards assessment works from the raw records against the EAST targets. It does not score the narrative learning summary or use it as input. The summary is short, student-friendly text built from a smaller set of records.'),
+        h('h2', { class: 'mt' }, 'Teacher controls and limits'),
+        h('ul', { class: 'hints' },
+          h('li', { class: 'small' }, 'The teacher starts updates with "Update all students." Students with no new records since the last check are skipped.'),
+          h('li', { class: 'small' }, 'Results appear to students as soon as they are saved. There is no approval step, and placements can\'t be edited by hand in the app.'),
+          h('li', { class: 'small' }, 'The teacher freezes each nine-weeks standards grade into the gradebook and uses reports such as "below 70" and "below grade level." When a student is placed above their band three runs in a row, teachers see "Teacher review ready." That label is information only.'),
+          h('li', { class: 'small' }, 'Placements are model judgments of the evidence the app could see. They are not validated measures of ability, and keeping the highest placement means one generous run stays on record.'),
+          h('li', { class: 'small' }, 'Known gap: database rules let a student create or update their own standards records directly.'))),
+    ];
+  }
+
   // ======================= routing =======================
-  const views = { goal: goalView, checkin: checkInView, rubric: rubricView, makeup: makeupView, summary: summaryView, teacher: teacherView };
+  const views = { goal: goalView, checkin: checkInView, rubric: rubricView, makeup: makeupView, summary: summaryView, standards: standardsView, teacher: teacherView };
   function current() { const t = location.hash.replace('#', ''); return views[t] ? t : 'goal'; }
   function render() {
     const tab = current();
     document.querySelectorAll('.tabs a').forEach(a => a.classList.toggle('on', a.dataset.tab === tab));
-    app.replaceChildren(...views[tab]());
+    app.replaceChildren(...views[tab]().flat(Infinity));
   }
   window.addEventListener('hashchange', render);
 
@@ -317,6 +377,9 @@
     'rubric-injection': () => { location.hash = 'rubric'; extra.rubric = 'injection'; },
     'makeup': () => { location.hash = 'makeup'; extra.makeup = { sample: 'summary', full: false }; },
     'summary': () => { location.hash = 'summary'; extra.summary = 'withEvidence'; },
+    'standards': () => { location.hash = 'standards'; extra.standards = 'growth'; },
+    'standards-lower': () => { location.hash = 'standards'; extra.standards = 'lower'; },
+    'standards-thin': () => { location.hash = 'standards'; extra.standards = 'thin'; },
   };
   if (scenes[scene]) scenes[scene]();
   render();

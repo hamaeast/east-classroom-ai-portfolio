@@ -73,3 +73,23 @@ test('makeup: half credit by default, clamped, zero returns without a grade', ()
   assert.equal(scoreMakeup(0, false).status, 'returned');
   assert.equal(scoreMakeup(-3, false).score, 0);
 });
+
+const S = createRequire(import.meta.url)('./policy.js');
+const r = (k, b, l) => ({ standard_key: k, assessed_grade_band: b, level: l });
+
+test('standards: lower new placement keeps the stored highest and saves no new record', () => {
+  const current = { results: [r('self_directed', '7-8', 'Proficient')] };
+  const kept = S.preserveHighestResults([r('self_directed', '3-6', 'Mastery')], current);
+  assert.equal(kept[0].level, 'Proficient');
+  assert.equal(S.hasPositionGrowth(kept, current), false);
+  const raised = S.preserveHighestResults([r('self_directed', '7-8', 'Mastery')], current);
+  assert.equal(S.hasPositionGrowth(raised, current), true);
+});
+
+test('standards: nine-weeks points use the strongest N, capped at enrolled-band Mastery', () => {
+  // Grade 10 (target 12), Nine Weeks 2 uses top 3: 11/12 + 9/12 + 6/12 = 2.1667 / 3 -> 14.4
+  const a = { results: [r('a', '9-12', 'Proficient'), r('b', '7-8', 'Mastery'), r('c', '3-6', 'Mastery'), r('d', 'K-2', 'Emerging')] };
+  assert.equal(S.standardsNineWeeksPoints(a, 10, 2).points, 14.4);
+  // Above-band work is capped at 1.0 credit
+  assert.equal(S.standardsNineWeeksPoints({ results: [r('a', '9-12', 'Mastery'), r('b', '9-12', 'Mastery')] }, 8, 1).points, 20);
+});

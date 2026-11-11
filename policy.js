@@ -86,7 +86,39 @@
     return { score, maxScore, status: score > 0 ? 'graded' : 'returned', gradeRecorded: score > 0 };
   }
 
-  const api = { decideGoal, decideCheckIn, scoreAssignment, scoreMakeup };
+  // ---- Standards placements and grading-period score -----------------------
+  // Copied from src/lib/standardsProgress.js and src/lib/standardsGrade.js.
+  const BANDS = ['K-2', '3-6', '7-8', '9-12'];
+  const LEVELS = ['Emerging', 'Proficient', 'Mastery'];
+  function resultScore(r) { return BANDS.indexOf(r && r.assessed_grade_band) * 3 + LEVELS.indexOf(r && r.level); }
+  // A new placement replaces the stored one only if it is strictly higher.
+  function preserveHighestResults(generated, current) {
+    const prev = Object.fromEntries(((current && current.results) || []).map(r => [r.standard_key, r]));
+    return generated.map(r => resultScore(r) > resultScore(prev[r.standard_key]) ? r : prev[r.standard_key] || r);
+  }
+  // A new history record is saved only when some standard moved up.
+  function hasPositionGrowth(results, current) {
+    const prev = Object.fromEntries(((current && current.results) || []).map(r => [r.standard_key, r]));
+    return !current || results.some(r => resultScore(r) > resultScore(prev[r.standard_key]));
+  }
+  const BAND_START = { 'K-2': 0, '3-6': 3, '7-8': 6, '9-12': 9 };
+  const BAND_MASTERY = { 'K-2': 3, '3-6': 6, '7-8': 9, '9-12': 12 };
+  const LEVEL_VALUE = { Emerging: 1, Proficient: 2, Mastery: 3 };
+  const STANDARDS_USED = { 1: 2, 2: 3, 3: 4, 4: 7 };
+  const resultRank = r => (BAND_START[r.assessed_grade_band] || 0) + (LEVEL_VALUE[r.level] || 0);
+  const targetRank = g => BAND_MASTERY[Number(g) >= 9 ? '9-12' : Number(g) >= 7 ? '7-8' : Number(g) >= 3 ? '3-6' : 'K-2'];
+  // Rule-based: average of the strongest N standards, each capped at the
+  // enrolled band's Mastery, scaled to 20 points.
+  function standardsNineWeeksPoints(assessment, grade, segment) {
+    const count = STANDARDS_USED[segment];
+    if (!assessment || !count) return { points: 0, used: [] };
+    const strongest = [...(assessment.results || [])].sort((a, b) => resultRank(b) - resultRank(a)).slice(0, count);
+    const used = strongest.map(r => ({ key: r.standard_key, rank: resultRank(r), target: targetRank(grade), credit: Math.min(1, resultRank(r) / targetRank(grade)) }));
+    const total = used.reduce((s, u) => s + u.credit, 0);
+    return { points: Math.round((total / count) * 200) / 10, used, count };
+  }
+
+  const api = { decideGoal, decideCheckIn, scoreAssignment, scoreMakeup, resultScore, preserveHighestResults, hasPositionGrowth, standardsNineWeeksPoints, STANDARDS_USED };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.DemoPolicy = api;
 })(typeof window !== 'undefined' ? window : globalThis);
