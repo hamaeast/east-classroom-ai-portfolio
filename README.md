@@ -12,16 +12,10 @@ A classroom web app for a junior-high **EAST** program. Students plan work with 
 
 ### For reviewers: a 5-minute tour
 
-1. **See it:** click through the [live demo](https://hamaeast.github.io/east-classroom-ai-portfolio/), or watch the walkthrough above (about 40 seconds, eleven screens).
-2. **Standards-based learning evidence:** [docs/standards-assessment.md](docs/standards-assessment.md) shows how records become placements and a rule-based grade.
-3. **How AI is used and constrained:** [docs/ai-design.md](docs/ai-design.md). Read the table that separates protections enforced in code from prompt instructions.
-4. **How the design changed with real students:** [docs/iterations.md](docs/iterations.md).
-5. **A real prompt in context:** [`WeeklyGoalForm.jsx`](src/components/east/WeeklyGoalForm.jsx) has the goal prompt and the one-clarification limit. [`CheckIns.jsx` line 215](src/pages/CheckIns.jsx#L215) has the two-round fallback and advisory evidence review.
-6. **Fewer AI calls through rules in code:** [docs/efficiency.md](docs/efficiency.md) quotes the specific code.
-7. **Grounding growth claims in records:** [`learningGrowthAnalysis.js`](src/lib/learningGrowthAnalysis.js) builds candidate cases in code before asking the model to judge them.
-8. **Security review:** [docs/security-review.md](docs/security-review.md) checks who can write grades, and the server-side fixes applied on 2026-11-11.
-9. **Honest limits:** [docs/expected-ai-behavior.md](docs/expected-ai-behavior.md#known-limitations).
-10. **How I'd measure AI accuracy next:** [docs/evaluation-plan.md](docs/evaluation-plan.md). This is a plan, not results yet.
+1. **Try the demo.** Open the **[live demo](https://hamaeast.github.io/east-classroom-ai-portfolio/)**, or watch the walkthrough above (about 40 seconds). Every student and record in it is fictional, and every AI response is prerecorded and labeled as such. The demo can't reach the live app or any AI service.
+2. **Explore the learning evidence.** Open the demo's **[Standards & evidence tab](https://hamaeast.github.io/east-classroom-ai-portfolio/#standards)**, then read [docs/standards-assessment.md](docs/standards-assessment.md). Together they show how a student's work across the dashboard becomes a placement on each EAST standard, with an evidence explanation and a next step, and how code converts placements into a grade with a fixed rule.
+3. **See the design decisions.** [docs/ai-design.md](docs/ai-design.md) explains how prompts are grounded in student work and rubrics, which safeguards code enforces versus which the prompt only asks for, and where the teacher reviews. [docs/iterations.md](docs/iterations.md) covers how prompts and workflows changed after students reported unclear feedback or grading problems.
+
 
 > **How student data was protected:** No real student records were copied. A student's name and email, the school and district names, a classroom photo folder, and other private links were removed from the code and replaced with settings or placeholders. Every student in the demo and screenshots is made up. Details: [docs/public-copy-notes.md](docs/public-copy-notes.md).
 
@@ -147,6 +141,22 @@ base44/workflows/     scheduled jobs (nightly coaching profiles, Friday missing 
 **Coaching other educators:**
 
 I helped three colleagues get started building with Base44 and supported them with troubleshooting. They now use their own projects in their classrooms.
+
+## Further documentation
+
+**Completed work**
+- [docs/efficiency.md](docs/efficiency.md): where rules in code replace or shrink AI calls, with quoted code
+- [docs/security-review.md](docs/security-review.md): who can write grades, and the server-side fixes deployed on 2026-11-11
+- Source-code examples:
+  - [`WeeklyGoalForm.jsx`](src/components/east/WeeklyGoalForm.jsx): the goal prompt and the one-clarification limit
+  - [`CheckIns.jsx` line 217](src/pages/CheckIns.jsx#L217): the two-round fallback and advisory evidence review
+  - [`learningGrowthAnalysis.js`](src/lib/learningGrowthAnalysis.js): candidate cases built in code before the model judges them
+- [docs/expected-ai-behavior.md](docs/expected-ai-behavior.md): fictional examples of intended behavior, plus [known limitations](docs/expected-ai-behavior.md#known-limitations)
+- [docs/public-copy-notes.md](docs/public-copy-notes.md): what was removed or generalized to protect student and school data
+- [docs/walkthrough.md](docs/walkthrough.md): a script for recording a narrated demo
+
+**Proposed, not yet run**
+- [docs/evaluation-plan.md](docs/evaluation-plan.md): how I would measure whether the AI's judgments match a teacher's. No results are reported yet.
 
 ## Checks
 
