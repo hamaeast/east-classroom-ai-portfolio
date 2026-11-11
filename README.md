@@ -4,13 +4,15 @@ A classroom web app for a junior-high **EAST** program. Students plan work with 
 
 **Designed by Aspen Ham, EAST facilitator.** Built on [Base44](https://base44.com) with AI-assisted development (see [My role](#my-role)).
 
-**[Open the live demo](https://hamaeast.github.io/east-classroom-ai-portfolio/)**: fictional data, prerecorded AI responses, no sign-in.
+> **In daily classroom use by about 100 students.** The real app holds student work, grades, and names, so it can't be shown publicly. This repository is a cleaned copy of its source code, plus a **separate demo with fictional students** so you can see how it works without exposing any student data. The demo is not connected to the real app.
+
+**[Open the live demo](https://hamaeast.github.io/east-classroom-ai-portfolio/)**: fictional data, prerecorded AI responses, no sign-in. It covers six workflows: weekly goals, check-ins, rubric scoring, makeup tutorials, the student learning summary, and teacher review.
 
 ![Animated walkthrough of the demo: goal review, check-in fallback, teacher review](docs/walkthrough.gif)
 
 ### For reviewers: a 5-minute tour
 
-1. **See it:** click through the [live demo](https://hamaeast.github.io/east-classroom-ai-portfolio/), or watch the walkthrough above (about 20 seconds).
+1. **See it:** click through the [live demo](https://hamaeast.github.io/east-classroom-ai-portfolio/), or watch the walkthrough above (about 30 seconds, nine screens).
 2. **How AI is used and constrained:** [docs/ai-design.md](docs/ai-design.md). Read the table that separates protections enforced in code from prompt instructions.
 3. **How the design changed with real students:** [docs/iterations.md](docs/iterations.md).
 4. **A real prompt in context:** [`WeeklyGoalForm.jsx`](src/components/east/WeeklyGoalForm.jsx) has the goal prompt and the one-clarification limit. [`CheckIns.jsx` line 215](src/pages/CheckIns.jsx#L215) has the two-round fallback and advisory evidence review.
@@ -18,11 +20,13 @@ A classroom web app for a junior-high **EAST** program. Students plan work with 
 6. **Honest limits:** [docs/expected-ai-behavior.md](docs/expected-ai-behavior.md#known-limitations).
 7. **How I'd measure AI accuracy next:** [docs/evaluation-plan.md](docs/evaluation-plan.md). This is a plan, not results yet.
 
-> This repository is a **sanitized public copy** for portfolio review. It is not connected to the live classroom app. Student names, school details, and private links have been removed (see [docs/public-copy-notes.md](docs/public-copy-notes.md)).
+> **How student data was protected:** No real student records were copied. A student's name and email, the school and district names, a classroom photo folder, and other private links were removed from the code and replaced with settings or placeholders. Every student in the demo and screenshots is made up. Details: [docs/public-copy-notes.md](docs/public-copy-notes.md).
 
 | Unclear goal gets one clarifying question | Check-in fallback after two AI suggestions | Teacher review queue |
 |-|-|-|
 | ![Unclear goal](docs/screenshots/goal-unclear.png) | ![Check-in fallback](docs/screenshots/checkin-fallback.png) | ![Teacher review](docs/screenshots/teacher.png) |
+| **Rubric scoring: code, AI, or teacher per question** | **Makeup tutorial scored against a rubric** | **Learning summary from the student's own records** |
+| ![Rubric scoring](docs/screenshots/rubric-injection.png) | ![Makeup tutorial](docs/screenshots/makeup.png) | ![Learning summary](docs/screenshots/summary.png) |
 
 *Screenshots come from the isolated demo in `demo/`. All students and projects are fictional, and every AI response is prerecorded and labeled as such.*
 
@@ -75,6 +79,10 @@ The `demo/` folder is a small static page with fictional data. It shows the stud
 2. an unclear goal getting one short clarifying question, then accepted on revision without another AI call
 3. a check-in returned with hints twice, then submitted on the third try and flagged for the teacher
 4. an evidence link that couldn't be inspected, shown to the teacher as advice without blocking submission
+5. **rubric scoring** of a reading response: multiple choice and keyword questions scored in code, an open answer scored by AI against the teacher's rubric, and a sketch left for the teacher. Samples include an answer that tries to trick the grader (the code clamps the score) and an AI outage (the work goes to the teacher)
+6. **makeup tutorials** for missed check-ins, scored on a 0–5 rubric, or 0–10 when the teacher allows full credit; a blank attempt is returned without a grade
+7. **the student learning summary**, for a student with several weeks of records and for one with almost none ("Not enough dashboard evidence yet")
+8. **the teacher review queue**, where AI output sits next to the student's own words
 
 ```bash
 cd demo && python3 -m http.server 8765
