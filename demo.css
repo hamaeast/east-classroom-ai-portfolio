@@ -55,3 +55,13 @@ details summary { cursor: pointer; font-weight: 600; }
 .foot { max-width: 980px; margin: 0 auto; padding: 0 16px 32px; color: var(--muted); font-size: 13px; }
 ul.hints { margin: 6px 0 0; padding-left: 18px; }
 .mt { margin-top: 10px; }
+.qcard { border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; margin-top: 10px; }
+.qcard p { margin: 4px 0; }
+.badge.by-code { background: var(--accent-soft); color: var(--accent); }
+.badge.by-ai { background: var(--sim-soft); color: var(--sim); }
+.badge.by-teacher { background: var(--warn-soft); color: var(--warn); }
+.sample-btns button.on { border-color: var(--accent); color: var(--accent); font-weight: 600; }
+label.check { display: flex; align-items: center; gap: 8px; font-weight: 500; }
+pre.tutorial { font-size: 14px; max-height: none; }
+.top { max-width: 1100px; }
+main, .foot { max-width: 1100px; }

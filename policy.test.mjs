@@ -45,3 +45,31 @@ test('check-in: model failure saves without blocking', () => {
   assert.equal(r.outcome, 'submitted');
   assert.deepEqual(r.evidence_analysis, []);
 });
+
+const { scoreAssignment, scoreMakeup } = createRequire(import.meta.url)('./policy.js');
+const Q = [
+  { id: 'q1', type: 'multiple_choice', correct_choice: 'B', points: 2 },
+  { id: 'q2', scoring_strategy: 'keyword', answer_key: 'pollen, bees', points: 2 },
+  { id: 'q3', points: 4 },
+  { id: 'q4', scoring_strategy: 'manual', points: 2 },
+];
+
+test('assignment: code scores MC and keyword, AI score is clamped, manual goes to teacher', () => {
+  const r = scoreAssignment(Q, { q1: 'B', q2: 'Bees carry pollen', q3: 'answer', q4: 'sketch' }, { scores: [{ id: 'q3', points: 10, feedback: 'x' }] }, 10);
+  assert.deepEqual(r.details.map(d => d.points), [2, 2, 4, 0]);
+  assert.equal(r.details[2].clampedFrom, 10);
+  assert.equal(r.gradingPending, true);
+});
+
+test('assignment: AI failure saves work and requires teacher review', () => {
+  const r = scoreAssignment([Q[2]], { q3: 'answer' }, null, 4);
+  assert.equal(r.details[0].points, 0);
+  assert.equal(r.gradingPending, true);
+});
+
+test('makeup: half credit by default, clamped, zero returns without a grade', () => {
+  assert.deepEqual(scoreMakeup(9, false), { score: 5, maxScore: 5, status: 'graded', gradeRecorded: true });
+  assert.equal(scoreMakeup(9, true).score, 9);
+  assert.equal(scoreMakeup(0, false).status, 'returned');
+  assert.equal(scoreMakeup(-3, false).score, 0);
+});
