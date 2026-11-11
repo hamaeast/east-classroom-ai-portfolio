@@ -118,7 +118,11 @@ base44/shared/        shared server logic (assignmentScoring.ts, gradingPeriods.
 base44/workflows/     scheduled jobs (nightly coaching profiles, Friday missing reflections, ...)
 ```
 
-## Beyond this app: coaching other educators
+## Beyond this app
+
+**Building for another educator:** I also designed and built [Class Stream](https://github.com/hamaeast/class-stream-ai-portfolio), a custom classroom app for a colleague's middle-school computer science class, used daily with about 150 students. It turns her Google Docs materials into interactive activities and adds AI-drafted assessments and AI scoring with teacher review ([live demo](https://hamaeast.github.io/class-stream-ai-portfolio/)).
+
+**Coaching other educators:**
 
 I helped three colleagues get started building with Base44 and supported them with troubleshooting. They now use their own projects in their classrooms.
 
