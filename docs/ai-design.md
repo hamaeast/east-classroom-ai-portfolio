@@ -76,7 +76,7 @@ A model can still ignore any of these. The code-enforced limits above bound the 
 
 ## Known gaps in the current design
 
-- **The check-in attempt counter is stored in the browser** (`localStorage`). Clearing site data resets it. It's a UX limit, not a security control.
-- **Most AI review runs in the browser**, so a technically skilled student could skip it. Grading rules that matter (deadlines, makeup credit, closed periods) are also checked in server functions or by row-level security.
+- **The check-in attempt counter is stored in the browser** (`localStorage`). This is a UX limit, not a security control. It isn't a grading risk either: resetting it gives the student more AI review, and skipping review flags the work for the teacher.
+- **Most AI review runs in the browser**, so a technically skilled student could skip it. That only removes advisory feedback. The real gap was that grade fields were also saved from the browser; see [security-review.md](security-review.md) for the findings and the fix in progress.
 - **Student data is sent to the model provider** chosen by Base44, including student names in some teacher-facing analyses (facilitation records). Schools adopting a similar design should check their data-privacy agreements.
 - **The learning summary returns free text**, so its structure (three headers, short bullets) is only requested, not validated.
