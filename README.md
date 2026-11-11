@@ -16,6 +16,7 @@ A classroom web app for a junior-high **EAST** program. Students plan work with 
 4. **A real prompt in context:** [`WeeklyGoalForm.jsx`](src/components/east/WeeklyGoalForm.jsx) has the goal prompt and the one-clarification limit. [`CheckIns.jsx` line 215](src/pages/CheckIns.jsx#L215) has the two-round fallback and advisory evidence review.
 5. **Grounding growth claims in records:** [`learningGrowthAnalysis.js`](src/lib/learningGrowthAnalysis.js) builds candidate cases in code before asking the model to judge them.
 6. **Honest limits:** [docs/expected-ai-behavior.md](docs/expected-ai-behavior.md#known-limitations).
+7. **How I'd measure AI accuracy next:** [docs/evaluation-plan.md](docs/evaluation-plan.md). This is a plan, not results yet.
 
 > This repository is a **sanitized public copy** for portfolio review. It is not connected to the live classroom app. Student names, school details, and private links have been removed (see [docs/public-copy-notes.md](docs/public-copy-notes.md)).
 
@@ -112,4 +113,4 @@ See [docs/checks.md](docs/checks.md) for the commands that were run on this publ
 
 ## License
 
-No license has been chosen yet, so all rights are reserved by default. Please ask before reusing the code.
+This repository is shared for viewing only. No open-source license is granted, so all rights are reserved. You're welcome to read the code and try the demo; please ask before reusing it.
