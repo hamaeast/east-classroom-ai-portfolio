@@ -1,6 +1,6 @@
 # Selected iterations
 
-These are design changes I made after watching students use the app. For each one, I describe the problem, the change, and where it shows up in the **current** code. The production Git history is not included in this public copy, so this page does not give dates or before-and-after metrics.
+These are design changes I made after the August 2026 launch. Most started with students telling me feedback was unclear or a grade looked wrong. I traced each report to its cause, such as a prompt, a scoring rule, or a workflow step, and then revised it. For each one, I describe the problem, the change, and where it shows up in the **current** code. The production Git history is not included in this public copy, so this page does not give dates or before-and-after metrics.
 
 ## 1. Accept understandable short goals
 

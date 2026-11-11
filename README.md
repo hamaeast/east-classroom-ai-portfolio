@@ -1,10 +1,10 @@
-# EAST Classroom: AI-assisted project learning platform
+# HSJA EAST Dashboard: AI-assisted project learning platform
 
 A classroom web app for a junior-high **EAST** program. Students plan work with weekly goals, report progress in weekly check-ins backed by evidence, and complete assignments and reflections. The teacher reviews all of it in one place. AI gives students short feedback, inspects their evidence links, scores work against rubrics, and drafts learning summaries. The teacher stays in charge of grades and final judgments.
 
 **Designed by Aspen Ham, EAST facilitator.** Built on [Base44](https://base44.com) with AI-assisted development (see [My role](#my-role)).
 
-> **In daily classroom use by about 100 students.** The real app holds student work, grades, and names, so it can't be shown publicly. This repository is a cleaned copy of its source code, plus a **separate demo with fictional students** so you can see how it works without exposing any student data. The demo is not connected to the real app.
+> **Built in July 2026, launched in August 2026, and in daily classroom use by 100 students.** The real app holds student work, grades, and names, so it can't be shown publicly. This repository is a cleaned copy of its source code, plus a **separate demo with fictional students** so you can see how it works without exposing any student data. The demo is not connected to the real app.
 
 **[Open the live demo](https://hamaeast.github.io/east-classroom-ai-portfolio/)**: fictional data, prerecorded AI responses, no sign-in. It covers six workflows: weekly goals, check-ins, rubric scoring, makeup tutorials, the student learning summary, and teacher review.
 
@@ -16,9 +16,10 @@ A classroom web app for a junior-high **EAST** program. Students plan work with 
 2. **How AI is used and constrained:** [docs/ai-design.md](docs/ai-design.md). Read the table that separates protections enforced in code from prompt instructions.
 3. **How the design changed with real students:** [docs/iterations.md](docs/iterations.md).
 4. **A real prompt in context:** [`WeeklyGoalForm.jsx`](src/components/east/WeeklyGoalForm.jsx) has the goal prompt and the one-clarification limit. [`CheckIns.jsx` line 215](src/pages/CheckIns.jsx#L215) has the two-round fallback and advisory evidence review.
-5. **Grounding growth claims in records:** [`learningGrowthAnalysis.js`](src/lib/learningGrowthAnalysis.js) builds candidate cases in code before asking the model to judge them.
-6. **Honest limits:** [docs/expected-ai-behavior.md](docs/expected-ai-behavior.md#known-limitations).
-7. **How I'd measure AI accuracy next:** [docs/evaluation-plan.md](docs/evaluation-plan.md). This is a plan, not results yet.
+5. **Fewer AI calls through rules in code:** [docs/efficiency.md](docs/efficiency.md) quotes the specific code.
+6. **Grounding growth claims in records:** [`learningGrowthAnalysis.js`](src/lib/learningGrowthAnalysis.js) builds candidate cases in code before asking the model to judge them.
+7. **Honest limits:** [docs/expected-ai-behavior.md](docs/expected-ai-behavior.md#known-limitations).
+8. **How I'd measure AI accuracy next:** [docs/evaluation-plan.md](docs/evaluation-plan.md). This is a plan, not results yet.
 
 > **How student data was protected:** No real student records were copied. A student's name and email, the school and district names, a classroom photo folder, and other private links were removed from the code and replaced with settings or placeholders. Every student in the demo and screenshots is made up. Details: [docs/public-copy-notes.md](docs/public-copy-notes.md).
 
@@ -42,9 +43,11 @@ EAST is project-based. Students pick community or technology projects and work o
 
 ## My role
 
-- **What I did:** I identified the classroom needs, designed the workflows, data model, grading rules, rubrics and AI prompts, and decided where AI may act and where the teacher must review. I tested the app with students and revised it based on what I saw in class.
-- **How it was built:** I built and revised the app in Base44, an AI-assisted app builder, and with AI coding assistants. Most of the code was generated from my specifications and revision requests. I did not write every line by hand. My contribution is the instructional design, the AI application design, and the testing and revision cycles.
-- **In use:** about **100 students currently use the app** (as of November 2026).
+- **Ownership:** I independently designed, built, tested, and maintain the app using Base44 and AI-assisted development. I identified the classroom needs, designed the workflows, data model, grading rules, rubrics and AI prompts, and decided where AI may act and where the teacher must review.
+- **How it was built:** I built and revised the app in Base44, an AI-assisted app builder, and with AI coding assistants. Most of the code was generated from my specifications and revision requests. I did not write every line by hand. My contribution is the instructional design, the AI application design, testing, and ongoing revision.
+- **Timeline and use:** I built the app in July 2026 and launched it in August 2026. It currently supports **100 student users** (as of November 2026).
+- **Iteration:** When students reported unclear feedback or grading problems, I investigated the cause and revised the prompts and workflows. Examples: [docs/iterations.md](docs/iterations.md).
+- **Efficiency:** I cut unnecessary AI calls with rule-based logic and smaller, more focused AI requests. See the code examples in [docs/efficiency.md](docs/efficiency.md); the savings haven't been measured.
 - **No measured outcomes:** I have not run a controlled study, so this repository makes no claims about measured learning gains.
 
 ## Major workflows
@@ -114,6 +117,10 @@ base44/functions/     server functions (gradeCheckInMakeup, scoreReadingAssignme
 base44/shared/        shared server logic (assignmentScoring.ts, gradingPeriods.ts, ...)
 base44/workflows/     scheduled jobs (nightly coaching profiles, Friday missing reflections, ...)
 ```
+
+## Beyond this app: coaching other educators
+
+I helped three colleagues get started building with Base44 and supported them with troubleshooting. They now use their own projects in their classrooms.
 
 ## Checks
 
