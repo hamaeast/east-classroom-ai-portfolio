@@ -1,0 +1,50 @@
+{
+  "name": "CheckInExemption",
+  "type": "object",
+  "properties": {
+    "week_ending": {
+      "type": "string",
+      "format": "date",
+      "description": "The Friday week-ending date exempted from check-ins"
+    },
+    "reason": {
+      "type": "string",
+      "description": "Reason students are exempt"
+    }
+  },
+  "required": [
+    "week_ending",
+    "reason"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "user"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

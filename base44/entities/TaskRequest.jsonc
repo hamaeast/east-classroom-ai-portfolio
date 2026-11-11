@@ -1,0 +1,113 @@
+{
+  "name": "TaskRequest",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "link_url": {
+      "type": "string",
+      "description": "Optional link attached to the student task request"
+    },
+    "link_description": {
+      "type": "string",
+      "description": "Required description when a link is attached"
+    },
+    "student_name": {
+      "type": "string"
+    },
+    "student_email": {
+      "type": "string"
+    },
+    "assigned_student_id": {
+      "type": "string",
+      "description": "Legacy student account assigned to a teacher-created task"
+    },
+    "assigned_student_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Student accounts assigned to one shared teacher-created task"
+    },
+    "class_period": {
+      "type": "number",
+      "minimum": 1,
+      "maximum": 7
+    },
+    "due_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "accepted",
+        "declined",
+        "completed"
+      ],
+      "default": "pending"
+    },
+    "completed_date": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "title",
+    "student_name",
+    "student_email",
+    "status"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "data.assigned_student_id": "{{user.id}}"
+        },
+        {
+          "data.assigned_student_ids": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "create": {
+      "created_by_id": "{{user.id}}"
+    },
+    "update": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
+}

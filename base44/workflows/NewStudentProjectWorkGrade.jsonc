@@ -1,0 +1,38 @@
+{
+  "name": "New Student Project Work Grade",
+  "description": "Creates the current live Project Work grade when a new student joins.",
+  "trigger": {
+    "config": {
+      "trigger_type": "app_user_auth",
+      "events": [
+        "signup"
+      ]
+    },
+    "condition": "${ .trigger.role == \"user\" }"
+  },
+  "definition": {
+    "document": {
+      "dsl": "1.0.0",
+      "name": "new_student_project_work_grade",
+      "version": "1.0",
+      "namespace": "base44"
+    },
+    "do": [
+      {
+        "initialize_student_score": {
+          "call": "invoke_backend_function",
+          "with": {
+            "function_name": "ensureProjectWorkGrades",
+            "args": {
+              "studentId": "${ .trigger.user_id }"
+            }
+          },
+          "then": "end",
+          "x-base44": {
+            "title": "Start student's Project Work grade"
+          }
+        }
+      }
+    ]
+  }
+}

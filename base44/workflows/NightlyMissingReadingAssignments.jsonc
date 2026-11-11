@@ -1,0 +1,45 @@
+{
+  "description": "After each school day ends, records zeros and student reminders for reading assignments that were not submitted.",
+  "trigger": {
+    "condition": null,
+    "config": {
+      "trigger_type": "scheduled",
+      "events": [],
+      "schedule_mode": "recurring",
+      "cron_expression": "5 0 * * *",
+      "one_time_date": null,
+      "timezone": "America/Chicago",
+      "interval_value": null,
+      "interval_unit": null,
+      "interval_anchor": null,
+      "ends_type": "never",
+      "ends_on_date": null,
+      "ends_after_count": null
+    }
+  },
+  "definition": {
+    "document": {
+      "dsl": "1.0.0",
+      "name": "nightly_missing_reading_assignments",
+      "version": "1.0",
+      "namespace": "base44"
+    },
+    "do": [
+      {
+        "record_missing_work": {
+          "call": "invoke_backend_function",
+          "with": {
+            "function_name": "recordMissingReadingAssignments",
+            "args": {}
+          },
+          "then": "end",
+          "x-base44": {
+            "title": "Record missing reading work",
+            "description": "Zeros and reminders"
+          }
+        }
+      }
+    ]
+  },
+  "name": "Nightly Missing Reading Assignments"
+}

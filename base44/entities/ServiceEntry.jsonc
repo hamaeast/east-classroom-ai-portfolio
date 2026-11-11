@@ -1,0 +1,143 @@
+{
+  "name": "ServiceEntry",
+  "type": "object",
+  "properties": {
+    "project_title": {
+      "type": "string"
+    },
+    "project_pitch_id": {
+      "type": "string",
+      "description": "Approved ProjectPitch linked to these service hours"
+    },
+    "student_names": {
+      "type": "string"
+    },
+    "student_emails": {
+      "type": "string",
+      "description": "Comma-separated emails of students credited on this entry"
+    },
+    "member_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "User IDs allowed to view this service entry"
+    },
+    "member_emails": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Account emails allowed to view this service entry"
+    },
+    "partner_name": {
+      "type": "string"
+    },
+    "service_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "hours": {
+      "type": "number",
+      "minimum": 0
+    },
+    "hourly_value": {
+      "type": "number",
+      "minimum": 0,
+      "default": 11.0
+    },
+    "donated_goods_value": {
+      "type": "number",
+      "minimum": 0,
+      "default": 0
+    },
+    "description": {
+      "type": "string"
+    },
+    "approval_status": {
+      "type": "string",
+      "enum": [
+        "approved",
+        "pending",
+        "rejected"
+      ],
+      "default": "approved"
+    },
+    "admin_feedback": {
+      "type": "string"
+    },
+    "weekly_check_in_id": {
+      "type": "string"
+    },
+    "ai_check_attempts": {
+      "type": "number",
+      "minimum": 0,
+      "default": 0
+    },
+    "ai_retry_after": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "project_title",
+    "service_date",
+    "hours"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "data.member_ids": "{{user.id}}"
+        },
+        {
+          "data.member_emails": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "create": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,68 @@
+{
+  "name": "NineWeeksUnlock",
+  "type": "object",
+  "properties": {
+    "student_id": {
+      "type": "string",
+      "description": "User id of the student granted the closed-period unlock"
+    },
+    "nine_weeks": {
+      "type": "number",
+      "enum": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "description": "Which nine-weeks period is unlocked for the student"
+    },
+    "unlocked_until": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Deadline after which the closed-period lock resumes for this student"
+    },
+    "reason": {
+      "type": "string",
+      "description": "Admin note explaining the rescue"
+    },
+    "full_credit_makeup": {
+      "type": "boolean",
+      "default": false,
+      "description": "When true, check-in makeup tutorials submitted while this unlock is active can earn full credit (10) instead of half credit (5)"
+    }
+  },
+  "required": [
+    "student_id",
+    "nine_weeks",
+    "unlocked_until"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "data.student_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

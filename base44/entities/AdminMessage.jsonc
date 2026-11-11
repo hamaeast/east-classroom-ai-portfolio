@@ -1,0 +1,83 @@
+{
+  "name": "AdminMessage",
+  "type": "object",
+  "properties": {
+    "message": {
+      "type": "string"
+    },
+    "sent_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "announcement",
+        "check_in_exemption",
+        "intervention"
+      ],
+      "default": "announcement"
+    },
+    "target_periods": {
+      "type": "array",
+      "description": "Class periods this message is sent to. Empty or omitted means all periods.",
+      "items": {
+        "type": "string"
+      }
+    },
+    "target_student_ids": {
+      "type": "array",
+      "description": "Specific student recipients. Empty or omitted means period or all-student targeting applies.",
+      "items": {
+        "type": "string"
+      }
+    },
+    "facilitation_record_id": {
+      "type": "string",
+      "description": "Facilitation record that produced this intervention message"
+    }
+  },
+  "required": [
+    "message",
+    "sent_date"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "data.target_student_ids": "{{user.id}}"
+        },
+        {
+          "data.target_student_ids": {
+            "$size": 0
+          }
+        },
+        {
+          "data.target_student_ids": {
+            "$exists": false
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

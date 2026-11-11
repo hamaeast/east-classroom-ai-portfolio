@@ -1,0 +1,226 @@
+{
+  "name": "FacilitationRecord",
+  "type": "object",
+  "properties": {
+    "review_item_id": {
+      "type": "string"
+    },
+    "subject_type": {
+      "type": "string",
+      "enum": [
+        "student",
+        "team",
+        "project"
+      ]
+    },
+    "student_id": {
+      "type": "string"
+    },
+    "student_name": {
+      "type": "string"
+    },
+    "team_name": {
+      "type": "string"
+    },
+    "project_id": {
+      "type": "string"
+    },
+    "project_name": {
+      "type": "string"
+    },
+    "concern_type": {
+      "type": "string"
+    },
+    "concern": {
+      "type": "string"
+    },
+    "supporting_information": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "source_refs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "entity_type": {
+            "type": "string"
+          },
+          "record_id": {
+            "type": "string"
+          },
+          "date": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "facilitator_actions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "facilitator_response": {
+      "type": "string"
+    },
+    "date_identified": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "date_addressed": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "follow_up_evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": "string"
+          },
+          "source": {
+            "type": "string"
+          },
+          "source_id": {
+            "type": "string"
+          },
+          "summary": {
+            "type": "string"
+          },
+          "relevance_note": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "date",
+          "source",
+          "source_id",
+          "summary",
+          "relevance_note"
+        ]
+      }
+    },
+    "pending_follow_up": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": "string"
+          },
+          "source": {
+            "type": "string"
+          },
+          "source_id": {
+            "type": "string"
+          },
+          "summary": {
+            "type": "string"
+          },
+          "relevance_note": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "date",
+          "source",
+          "source_id",
+          "summary",
+          "relevance_note"
+        ]
+      }
+    },
+    "dismissed_source_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "monitoring",
+        "improvement_evident",
+        "some_improvement",
+        "continued_support_needed",
+        "no_clear_change",
+        "resolved",
+        "complete"
+      ],
+      "default": "monitoring"
+    },
+    "outcome_note": {
+      "type": "string"
+    },
+    "status_history": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "note": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "date",
+          "status"
+        ]
+      }
+    },
+    "last_follow_up_scan_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "follow_up_review_count": {
+      "type": "number",
+      "minimum": 0,
+      "default": 0
+    }
+  },
+  "required": [
+    "subject_type",
+    "concern_type",
+    "concern",
+    "supporting_information",
+    "facilitator_actions",
+    "facilitator_response",
+    "date_identified",
+    "date_addressed",
+    "status"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

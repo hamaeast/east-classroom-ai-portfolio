@@ -1,0 +1,183 @@
+{
+  "name": "User",
+  "type": "object",
+  "properties": {
+    "role": {
+      "type": "string",
+      "description": "The role of the user in the app",
+      "enum": [
+        "admin",
+        "user"
+      ],
+      "default": "user"
+    },
+    "display_name": {
+      "type": "string",
+      "description": "Facilitator-corrected name shown throughout the app"
+    },
+    "class_period": {
+      "type": "number",
+      "description": "Class period the student is enrolled in (1-7)",
+      "enum": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ]
+    },
+    "grade": {
+      "type": "number",
+      "description": "Grade level the student is in",
+      "enum": [
+        7,
+        8,
+        9
+      ]
+    },
+    "student_id": {
+      "type": "string",
+      "description": "Student's eSchoolPLUS SIS ID used for TAC score imports"
+    },
+    "is_archived": {
+      "type": "boolean",
+      "description": "Archived students from previous school years are hidden from active class-period lists, but their dashboard and student report data is never affected",
+      "default": false
+    },
+    "dismissed_message_ids": {
+      "type": "string",
+      "description": "Comma-separated AdminMessage ids this student has already dismissed, so previously seen announcements don't pop up again"
+    },
+    "dismissed_help_response_ids": {
+      "type": "string",
+      "description": "Comma-separated HelpRequest ids this student has already seen/dismissed the admin reply for"
+    },
+    "dismissed_task_notice_keys": {
+      "type": "string",
+      "description": "Comma-separated task-id and status keys for task updates this student dismissed"
+    },
+    "learning_summary_overall_text": {
+      "type": "string",
+      "description": "Cached AI-generated overall learning summary for this student"
+    },
+    "learning_summary_overall_fingerprint": {
+      "type": "string",
+      "description": "Data fingerprint the cached overall summary was generated from, used to detect when it needs to be regenerated"
+    },
+    "learning_summary_overall_checked_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Last successful check of the overall learning summary, including checks without new information"
+    },
+    "learning_summary_month_text": {
+      "type": "string",
+      "description": "Cached AI-generated last-month learning summary for this student"
+    },
+    "learning_summary_month_fingerprint": {
+      "type": "string",
+      "description": "Data fingerprint the cached overall summary was generated from, used to detect when it needs to be regenerated"
+    },
+    "learning_summary_month_checked_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Last successful check of the monthly learning summary, including checks without new information"
+    },
+    "learning_summary_popup_generated_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When an administrator generated a learning summary that should appear in the student's next grade popup"
+    },
+    "learning_summary_popup_seen_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "The learning summary generation timestamp most recently acknowledged by the student"
+    },
+    "learning_summary_popup_range": {
+      "type": "string",
+      "enum": [
+        "overall",
+        "month"
+      ],
+      "description": "The generated learning summary range waiting to be shown in the grade popup"
+    },
+    "theme_palette": {
+      "type": "string",
+      "description": "Color theme saved for this individual account",
+      "enum": [
+        "current",
+        "cobalt-violet",
+        "emerald-gold",
+        "crimson-cyan",
+        "teal-coral",
+        "ice-amber",
+        "purple-lime",
+        "sunset-indigo",
+        "ocean-mint",
+        "ruby-gold",
+        "midnight-rose",
+        "sky-coral-light",
+        "sage-gold-light",
+        "sand-teal-light",
+        "navy-copper",
+        "forest-orchid",
+        "charcoal-aqua",
+        "plum-amber",
+        "solar-blue",
+        "hot-pink-teal"
+      ],
+      "default": "current"
+    },
+    "modifications": {
+      "type": "array",
+      "description": "Facilitator-assigned accessibility and deadline accommodations",
+      "items": {
+        "type": "string",
+        "enum": [
+          "dictation",
+          "text_to_speech",
+          "assignment_deadline_extension"
+        ]
+      },
+      "default": []
+    },
+    "assignment_deadline_extension_days": {
+      "type": "number",
+      "description": "Number of school instructional days added to every assignment deadline",
+      "minimum": 0,
+      "maximum": 30,
+      "default": 0
+    },
+    "absence_deadline_adjustments": {
+      "type": "array",
+      "description": "Facilitator-managed absences that move deadlines falling on absent instructional days",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "start_date": {
+            "type": "string",
+            "format": "date"
+          },
+          "days": {
+            "type": "number",
+            "minimum": 1,
+            "maximum": 30
+          }
+        },
+        "required": [
+          "id",
+          "start_date",
+          "days"
+        ]
+      },
+      "default": []
+    }
+  },
+  "required": [
+    "role"
+  ]
+}

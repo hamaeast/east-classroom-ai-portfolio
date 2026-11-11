@@ -1,0 +1,187 @@
+{
+  "name": "WeeklyGoal",
+  "type": "object",
+  "properties": {
+    "student_id": {
+      "type": "string"
+    },
+    "week_start": {
+      "type": "string",
+      "format": "date"
+    },
+    "goal_text": {
+      "type": "string"
+    },
+    "goal_due_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "goal_submitted_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "goal_grade": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 10
+    },
+    "goal_assignment_id": {
+      "type": "string"
+    },
+    "ai_suggestion_used": {
+      "type": "boolean",
+      "default": false
+    },
+    "ai_suggestion": {
+      "type": "string"
+    },
+    "reflection_due_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "reflection_submitted_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "reflection_grade": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 10
+    },
+    "reflection_assignment_id": {
+      "type": "string"
+    },
+    "met_goal": {
+      "type": "string",
+      "enum": [
+        "yes",
+        "no"
+      ]
+    },
+    "met_goal_day": {
+      "type": "string",
+      "enum": [
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday"
+      ]
+    },
+    "goal_too_hard": {
+      "type": "string",
+      "enum": [
+        "yes",
+        "no"
+      ]
+    },
+    "reflection_notes": {
+      "type": "string"
+    },
+    "collaboration_contribution": {
+      "type": "string",
+      "description": "How the student helped their team during the week"
+    },
+    "cart_goal_answer": {
+      "type": "string",
+      "description": "CART make-up response replacing a goal more than seven days overdue"
+    },
+    "cart_goal_submitted_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "cart_reflection_answer": {
+      "type": "string",
+      "description": "CART make-up response replacing a reflection more than seven days overdue"
+    },
+    "cart_reflection_submitted_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "student_id",
+    "week_start",
+    "goal_due_at",
+    "reflection_due_at"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "data.student_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "create": {
+      "$or": [
+        {
+          "$and": [
+            {
+              "data.student_id": "{{user.id}}"
+            },
+            {
+              "data.week_start": {
+                "$nin": [
+                  "2026-08-03",
+                  "2026-08-10",
+                  "2026-08-17",
+                  "2026-08-24",
+                  "2026-08-31",
+                  "2026-09-07",
+                  "2026-09-14",
+                  "2026-09-21"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "$and": [
+            {
+              "data.student_id": "{{user.id}}"
+            },
+            {
+              "data.week_start": {
+                "$nin": [
+                  "2026-08-03",
+                  "2026-08-10",
+                  "2026-08-17",
+                  "2026-08-24",
+                  "2026-08-31",
+                  "2026-09-07",
+                  "2026-09-14",
+                  "2026-09-21"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

@@ -1,0 +1,51 @@
+import { useEffect, useState } from 'react';
+import { base44 } from '@/api/base44Client';
+import useEntityList from '@/hooks/useEntityList';
+import { useAuth } from '@/lib/AuthContext';
+import { currentSchoolYearRange } from '@/lib/schoolYear';
+import { chicagoToday, currentGoalWeekStart, isEnrollmentExemptWeek, suggestedReflectionDue } from '@/lib/weeklyGoals';
+import { isFullSchoolWeekClosed } from '@/lib/schoolCalendar';
+import { adjustedAssignmentDueDate } from '@/lib/assignmentDeadline';
+import { buildStudentRecommendationContext } from '@/lib/studentRecommendationContext';
+import PageHeader from '@/components/east/PageHeader';
+import WeeklyGoalForm from '@/components/east/WeeklyGoalForm';
+import GoalReflectionForm from '@/components/east/GoalReflectionForm';
+import AdminGoalAssignments from '@/components/east/AdminGoalAssignments';
+import WeeklyGoalSchedule from '@/components/east/WeeklyGoalSchedule';
+import MissingGoalMakeups from '@/components/east/MissingGoalMakeups';
+import GoalCoachingRoster from '@/components/east/GoalCoachingRoster';
+
+export default function Goals() {
+  const { user } = useAuth();
+  const { items: goals, loading, reload } = useEntityList('WeeklyGoal');
+  const { items: coachingProfiles, loading: coachingLoading } = useEntityList('GoalCoachingProfile');
+  const { items: pitches } = useEntityList('ProjectPitch');
+  const { items: checkIns } = useEntityList('WeeklyCheckIn');
+  const { items: users } = useEntityList('User');
+  const { items: assignments, loading: assignmentsLoading, reload: reloadAssignments } = useEntityList('Assignment');
+  const { items: grades, loading: gradesLoading, reload: reloadGrades } = useEntityList('AssignmentGrade');
+  const [assignmentIds, setAssignmentIds] = useState(null);
+  const weekStart = currentGoalWeekStart();
+  const closedWeek = isFullSchoolWeekClosed(weekStart);
+  useEffect(() => {
+    if (closedWeek) return;
+    const year = currentSchoolYearRange();
+    base44.functions.invoke('ensureWeeklyGoalAssignments', { weekStart, goalDueDate: weekStart, reflectionDueDate: suggestedReflectionDue(weekStart).slice(0, 10), schoolYear: year.label }).then(({ data }) => setAssignmentIds(data));
+  }, [closedWeek, weekStart]);
+  const recommendationContext = buildStudentRecommendationContext(user, { goals, pitches, checkIns });
+  const missingWork = user?.role !== 'admin' && !loading && !gradesLoading && !assignmentsLoading ? <MissingGoalMakeups student={user} goals={goals} grades={grades} assignments={assignments} reload={reload} recommendationContext={recommendationContext} coachingProfile={coachingProfiles.find(item => item.student_id === user.id)} /> : null;
+  if (coachingLoading && user?.role !== 'admin') return <p className="text-sm text-muted-foreground">Preparing goal support…</p>;
+  if (closedWeek && user?.role !== 'admin') return <><PageHeader title="Weekly Goals" description="Set one weekly goal schedule for every active student." />{missingWork}<div className="glass-panel p-8 text-center text-sm text-muted-foreground">No weekly goal or reflection is assigned because school is closed for the entire week.</div></>;
+  if (user?.role === 'admin') return <><PageHeader title="Weekly Goals" description="Set one weekly goal schedule for every active student." />{!closedWeek && <AdminGoalAssignments students={users.filter(item => item.role !== 'admin' && !item.is_archived)} goals={goals} goalsLoading={loading} weekStart={weekStart} assignmentIds={assignmentIds} reload={reload} />}<WeeklyGoalSchedule assignments={assignments} schoolYear={currentSchoolYearRange().label} reloadAssignments={reloadAssignments} reloadGrades={reloadGrades} /><GoalCoachingRoster profiles={coachingProfiles} students={users} /></>;
+  if (assignmentIds?.active === false) return <><PageHeader title="My Weekly Goal" description="Set one goal for this week, then reflect on it by Friday." />{missingWork}<div className="glass-panel p-8 text-center text-sm text-muted-foreground">Weekly goals are turned off for this week.</div></>;
+  if (isEnrollmentExemptWeek(user, weekStart)) return <><PageHeader title="My Weekly Goal" description="Set one goal for this week, then reflect on it by Friday." />{missingWork}<div className="glass-panel p-8 text-center text-sm font-semibold text-muted-foreground">Exempt — you joined after this weekly goal and reflection period began.</div></>;
+  const record = goals.filter(item => item.student_id === user?.id && item.week_start === weekStart).sort((a, b) => Number(Boolean(b.goal_submitted_at)) - Number(Boolean(a.goal_submitted_at)) || Number(Boolean(b.reflection_submitted_at)) - Number(Boolean(a.reflection_submitted_at)))[0];
+  const coachingProfile = coachingProfiles.find(item => item.student_id === user?.id);
+  const goalDue = adjustedAssignmentDueDate(record?.goal_due_at, user);
+  const reflectionDue = adjustedAssignmentDueDate(record?.reflection_due_at, user);
+  const dueLabel = value => value?.includes('T') ? new Date(value).toLocaleString() : `${value} at 11:59 PM`;
+  const reflectionDay = weekStart === '2026-10-05' ? 'Thursday' : 'Friday';
+  const reflectionOpenDate = record ? suggestedReflectionDue(record.week_start).slice(0, 10) : '';
+  const reflectionOpen = chicagoToday() >= reflectionOpenDate;
+  return <><PageHeader title="My Weekly Goal" description={`Set one goal for this week, then reflect on it by ${reflectionDay}.`} />{missingWork}{loading || !record ? <p>Preparing this week’s assignments…</p> : <div className="space-y-6"><section className="glass-panel p-5"><h3 className="mb-1 font-semibold">Weekly goal · 5 points</h3><p className="mb-3 text-xs text-muted-foreground">Due {dueLabel(goalDue)}</p>{record.goal_submitted_at ? <p className="text-sm"><b>Your goal:</b> {record.goal_text}</p> : <WeeklyGoalForm record={record} reload={reload} recommendationContext={recommendationContext} coachingProfile={coachingProfile} studentId={user.id} />}</section><section className="glass-panel p-5"><h3 className="mb-1 font-semibold">{reflectionDay} goal reflection · 5 points</h3><p className="mb-3 text-xs text-muted-foreground">Due {dueLabel(reflectionDue)}</p>{!record.goal_submitted_at ? <p className="text-sm text-muted-foreground">Submit your weekly goal first.</p> : record.reflection_submitted_at ? <p className="text-sm font-semibold">Reflection submitted · 5/5</p> : reflectionOpen ? <GoalReflectionForm record={record} reload={reload} coachingProfile={coachingProfile} studentId={user.id} /> : <p className="text-sm text-muted-foreground">Reflection opens {reflectionDay}. Come back then to reflect on your goal.</p>}</section></div>}</>;
+}

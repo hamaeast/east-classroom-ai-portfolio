@@ -1,0 +1,10 @@
+export default function AssignmentGradingGuide({ assignment }) {
+  const questions = assignment.questions || [];
+  return <section className="rounded-lg border border-neon-cyan/40 bg-neon-cyan/10 p-4 text-sm">
+    <h4 className="font-semibold">How this assignment is graded</h4>
+    <p className="mt-1 text-muted-foreground">Maximum: {assignment.max_points} points. Saved answers are kept when editing; saving rechecks submitted work against the updated questions, points, and rubric. New unanswered questions and manual scoring need teacher review. Excused grades stay excused.</p>
+    {!questions.length && <><p className="mt-2">{assignment.assignment_type === 'project_work' ? 'Live score: 5 points minus one per off-task mark, minimum zero. No submission required.' : 'AI awards partial credit for relevance, accuracy, completeness, and support, using the rubric below when supplied.'}</p>{assignment.grading_rubric && <p className="mt-2 whitespace-pre-wrap">{assignment.grading_rubric}</p>}</>}
+    {questions.map((question, index) => <div key={question.id} className="mt-3 border-t border-border pt-2"><p className="font-semibold">Question {index + 1}: {question.points} points</p><p>{question.type === 'multiple_choice' ? 'Exact correct choice: full points; otherwise zero.' : question.scoring_strategy === 'manual' ? 'Teacher scores this response manually.' : question.scoring_strategy === 'keyword' ? 'All listed keywords must appear (not case-sensitive): full points; otherwise zero.' : 'AI scores against the rubric with partial credit.'}</p><p className="mt-1 whitespace-pre-wrap text-muted-foreground">{question.type === 'multiple_choice' ? `Correct answer: ${question.correct_choice || '(not selected)'}` : question.answer_key || 'No rubric supplied.'}</p></div>)}
+    <p className="mt-3 text-muted-foreground">Late submissions are saved for teacher review. This teacher-only guide and answer keys are not included in the student preview.</p>
+  </section>;
+}

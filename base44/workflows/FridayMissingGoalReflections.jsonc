@@ -1,0 +1,45 @@
+{
+  "description": "Records zeroes for active students who have not submitted the weekly goal reflection by Friday at midnight.",
+  "trigger": {
+    "condition": null,
+    "config": {
+      "trigger_type": "scheduled",
+      "events": [],
+      "schedule_mode": "recurring",
+      "cron_expression": "0 0 * * 6",
+      "one_time_date": null,
+      "timezone": "America/Chicago",
+      "interval_value": null,
+      "interval_unit": null,
+      "interval_anchor": null,
+      "ends_type": "never",
+      "ends_on_date": null,
+      "ends_after_count": null
+    }
+  },
+  "definition": {
+    "document": {
+      "dsl": "1.0.0",
+      "name": "friday_missing_goal_reflections",
+      "version": "1.0",
+      "namespace": "base44"
+    },
+    "do": [
+      {
+        "record_missing_reflections": {
+          "call": "invoke_backend_function",
+          "with": {
+            "function_name": "recordMissingGoalReflections",
+            "args": {}
+          },
+          "then": "end",
+          "x-base44": {
+            "title": "Record missing reflections",
+            "description": "Assign Friday zeroes"
+          }
+        }
+      }
+    ]
+  },
+  "name": "Friday Missing Goal Reflections"
+}

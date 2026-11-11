@@ -1,0 +1,9 @@
+import { facilitationSubject } from '@/lib/facilitationConstants';
+
+const labels = { to_review: 'To Review', response_needed: 'Response Needed', monitoring: 'Monitoring', follow_up_ready: 'Follow-Up Ready', positive_progress: 'Positive Progress' };
+
+export default function FacilitationQueue({ active, setActive, groups, onOpen }) {
+  return <div><div className="mb-4 grid gap-2 sm:grid-cols-2 xl:grid-cols-5">{Object.keys(labels).map(key => <button key={key} onClick={() => setActive(key)} className={`rounded-lg border p-3 text-left ${active === key ? 'border-neon-cyan bg-neon-cyan/10' : 'bg-card'}`}><span className="block text-sm font-semibold">{labels[key]}</span><span className="text-xs text-muted-foreground">{groups[key].length} item{groups[key].length === 1 ? '' : 's'}</span></button>)}</div>
+    {!groups[active].length ? <div className="rounded-lg border border-dashed p-8 text-center text-sm text-muted-foreground">Nothing is waiting in {labels[active]}.</div> : <div className="grid gap-3">{groups[active].map(item => <button key={`${item.kind}-${item.id}`} onClick={() => onOpen(item)} className="rounded-xl border bg-card p-4 text-left"><div className="flex flex-wrap items-center justify-between gap-2"><span className="text-xs font-bold uppercase tracking-wide text-neon-cyan">{facilitationSubject(item)}</span><span className="rounded-full bg-muted px-2 py-1 text-xs font-semibold capitalize">{(item.priority || item.status || '').replaceAll('_', ' ')}</span></div><p className="mt-2 font-semibold">{item.concern}</p><p className="mt-1 line-clamp-2 text-sm text-muted-foreground">{item.supporting_information?.join(' ') || item.facilitator_response}</p></button>)}</div>}
+  </div>;
+}

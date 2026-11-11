@@ -1,0 +1,121 @@
+{
+  "name": "StandardsAssessment",
+  "type": "object",
+  "properties": {
+    "student_id": {
+      "type": "string"
+    },
+    "grade_level": {
+      "type": "number"
+    },
+    "grade_band": {
+      "type": "string",
+      "enum": [
+        "K-2",
+        "3-6",
+        "7-8",
+        "9-12"
+      ]
+    },
+    "generated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "last_checked_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Most recent successful standards review, including checks with no new evidence or change in placement"
+    },
+    "results": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "standard_key": {
+            "type": "string"
+          },
+          "assessed_grade_band": {
+            "type": "string",
+            "enum": [
+              "K-2",
+              "3-6",
+              "7-8",
+              "9-12"
+            ]
+          },
+          "level": {
+            "type": "string",
+            "enum": [
+              "Emerging",
+              "Proficient",
+              "Mastery"
+            ]
+          },
+          "target": {
+            "type": "string"
+          },
+          "evidence_summary": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "standard_key",
+          "assessed_grade_band",
+          "level",
+          "target",
+          "evidence_summary"
+        ]
+      }
+    }
+  },
+  "required": [
+    "student_id",
+    "grade_level",
+    "grade_band",
+    "generated_at",
+    "results"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "data.student_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "create": {
+      "$or": [
+        {
+          "data.student_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "data.student_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

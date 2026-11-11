@@ -1,0 +1,156 @@
+{
+  "name": "FacilitationReviewItem",
+  "type": "object",
+  "properties": {
+    "subject_type": {
+      "type": "string",
+      "enum": [
+        "student",
+        "team",
+        "project"
+      ]
+    },
+    "student_id": {
+      "type": "string"
+    },
+    "student_name": {
+      "type": "string"
+    },
+    "team_name": {
+      "type": "string"
+    },
+    "project_id": {
+      "type": "string"
+    },
+    "project_name": {
+      "type": "string"
+    },
+    "concern_type": {
+      "type": "string",
+      "enum": [
+        "next_steps",
+        "repeated_challenge",
+        "help_request",
+        "project_progress",
+        "teamwork",
+        "communication",
+        "documentation",
+        "returned_work",
+        "positive_progress",
+        "other"
+      ]
+    },
+    "priority": {
+      "type": "string",
+      "enum": [
+        "address",
+        "follow_up",
+        "monitor",
+        "positive_progress"
+      ]
+    },
+    "concern": {
+      "type": "string"
+    },
+    "supporting_information": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "source_refs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "entity_type": {
+            "type": "string"
+          },
+          "record_id": {
+            "type": "string"
+          },
+          "date": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "entity_type",
+          "record_id",
+          "date",
+          "label"
+        ]
+      }
+    },
+    "queue_status": {
+      "type": "string",
+      "enum": [
+        "to_review",
+        "response_needed",
+        "monitoring",
+        "converted",
+        "dismissed"
+      ],
+      "default": "to_review"
+    },
+    "review_decision": {
+      "type": "string",
+      "enum": [
+        "yes",
+        "not_yet",
+        "monitoring",
+        "not_applicable"
+      ]
+    },
+    "draft_actions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "draft_response": {
+      "type": "string"
+    },
+    "dedupe_key": {
+      "type": "string"
+    },
+    "scanned_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "subject_type",
+    "concern_type",
+    "priority",
+    "concern",
+    "supporting_information",
+    "queue_status",
+    "dedupe_key",
+    "scanned_at"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

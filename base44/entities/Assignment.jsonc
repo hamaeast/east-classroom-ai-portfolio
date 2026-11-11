@@ -1,0 +1,187 @@
+{
+  "name": "Assignment",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "grading_rubric": {
+      "type": "string",
+      "description": "Teacher rubric for grading an assignment without individual questions"
+    },
+    "max_points": {
+      "type": "number",
+      "minimum": 1,
+      "default": 10
+    },
+    "due_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "due_time": {
+      "type": "string",
+      "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$",
+      "default": "23:59"
+    },
+    "publish_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "release_date": {
+      "type": "string",
+      "format": "date",
+      "description": "School date used for period-based release times"
+    },
+    "period_release_times": {
+      "type": "object",
+      "properties": {
+        "1": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "2": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "3": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "6": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "7": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "additionalProperties": false
+    },
+    "instant_release": {
+      "type": "boolean",
+      "default": false,
+      "description": "Release at class start instead of ten minutes after"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true
+    },
+    "school_year": {
+      "type": "string"
+    },
+    "grading_period": {
+      "type": "number",
+      "enum": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "default": 1
+    },
+    "frozen_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When a nine-weeks standards grade was frozen as a snapshot; once set, the assignment's grades are immutable"
+    },
+    "assignment_type": {
+      "type": "string",
+      "enum": [
+        "plain",
+        "reading",
+        "project_work"
+      ],
+      "default": "plain"
+    },
+    "article_url": {
+      "type": "string"
+    },
+    "article_image_url": {
+      "type": "string",
+      "description": "Image displayed with the reading passage"
+    },
+    "passage_text": {
+      "type": "string",
+      "description": "Reading passage displayed directly inside the student assignment"
+    },
+    "questions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "multiple_choice",
+              "free_response"
+            ]
+          },
+          "prompt": {
+            "type": "string"
+          },
+          "choices": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "correct_choice": {
+            "type": "string"
+          },
+          "scoring_strategy": {
+            "type": "string",
+            "enum": [
+              "ai",
+              "keyword",
+              "manual"
+            ]
+          },
+          "answer_key": {
+            "type": "string"
+          },
+          "points": {
+            "type": "number",
+            "minimum": 0
+          }
+        },
+        "required": [
+          "id",
+          "type",
+          "prompt",
+          "points"
+        ]
+      }
+    }
+  },
+  "required": [
+    "title",
+    "max_points",
+    "is_active",
+    "school_year"
+  ],
+  "rls": {
+    "read": {},
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

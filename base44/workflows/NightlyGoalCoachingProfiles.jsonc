@@ -1,0 +1,45 @@
+{
+  "definition": {
+    "document": {
+      "dsl": "1.0.0",
+      "name": "nightly_goal_coaching_profiles",
+      "version": "1.0",
+      "namespace": "base44"
+    },
+    "do": [
+      {
+        "refresh_coaching_profiles": {
+          "call": "invoke_backend_function",
+          "with": {
+            "function_name": "updateGoalCoachingProfiles",
+            "args": {}
+          },
+          "then": "end",
+          "x-base44": {
+            "title": "Refresh goal coaching",
+            "description": "Review recent goals and reflections"
+          }
+        }
+      }
+    ]
+  },
+  "trigger": {
+    "condition": null,
+    "config": {
+      "trigger_type": "scheduled",
+      "events": [],
+      "schedule_mode": "recurring",
+      "cron_expression": "0 2 * * *",
+      "one_time_date": null,
+      "timezone": "America/Chicago",
+      "interval_value": null,
+      "interval_unit": null,
+      "interval_anchor": null,
+      "ends_type": "never",
+      "ends_on_date": null,
+      "ends_after_count": null
+    }
+  },
+  "description": "Refreshes goal-setting support eligibility from the last eight weeks of goal and reflection history.",
+  "name": "Nightly Goal Coaching Profiles"
+}

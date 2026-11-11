@@ -1,0 +1,69 @@
+{
+  "name": "GoalCoachingSession",
+  "type": "object",
+  "properties": {
+    "student_id": {
+      "type": "string"
+    },
+    "week_start": {
+      "type": "string",
+      "format": "date"
+    },
+    "phase": {
+      "type": "string",
+      "enum": [
+        "goal",
+        "reflection"
+      ]
+    },
+    "questions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "answers": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "completed": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": [
+    "student_id",
+    "week_start",
+    "phase",
+    "questions",
+    "answers",
+    "completed"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "data.student_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "create": {
+      "data.student_id": "{{user.id}}"
+    },
+    "update": {
+      "data.student_id": "{{user.id}}"
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

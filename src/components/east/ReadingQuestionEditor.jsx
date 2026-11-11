@@ -1,0 +1,14 @@
+export default function ReadingQuestionEditor({ question, index, update, remove }) {
+  const free = question.type === 'free_response';
+  const set = data => update(index, { ...question, ...data });
+  return <fieldset className="rounded-lg border border-border/60 p-4">
+    <div className="mb-3 flex items-center justify-between"><legend className="font-semibold">Question {index + 1}</legend><button type="button" onClick={() => remove(index)} className="text-xs text-destructive">Remove</button></div>
+    <div className="grid gap-3 sm:grid-cols-2">
+      <select value={question.type} onChange={event => set({ type: event.target.value, choices: event.target.value === 'multiple_choice' ? ['', ''] : [], correct_choice: '', scoring_strategy: event.target.value === 'free_response' ? 'manual' : '', answer_key: '' })}><option value="multiple_choice">Multiple choice</option><option value="free_response">Free response</option></select>
+      <input required type="number" min="1" aria-label="Question points" value={question.points} onChange={event => set({ points: Number(event.target.value) })} />
+    </div>
+    <textarea required className="mt-3" rows={2} placeholder="Question prompt" value={question.prompt} onChange={event => set({ prompt: event.target.value })} />
+    {!free && <div className="mt-3 space-y-2">{question.choices.map((choice, choiceIndex) => <div key={choiceIndex} className="flex items-center gap-2"><input type="radio" required name={`correct-${question.id}`} checked={question.correct_choice === choice && Boolean(choice)} onChange={() => set({ correct_choice: choice })} /><input required placeholder={`Choice ${choiceIndex + 1}`} value={choice} onChange={event => { const choices = [...question.choices]; const old = choices[choiceIndex]; choices[choiceIndex] = event.target.value; set({ choices, correct_choice: question.correct_choice === old ? event.target.value : question.correct_choice }); }} /></div>)}<button type="button" onClick={() => set({ choices: [...question.choices, ''] })} className="text-xs font-semibold text-neon-cyan">+ Add choice</button></div>}
+    {free && <div className="mt-3 space-y-3"><label className="east-label">How should this response be scored?<select value={question.scoring_strategy} onChange={event => set({ scoring_strategy: event.target.value })}><option value="manual">Send to manual review</option><option value="keyword">Required keyword match</option><option value="ai">AI score against rubric</option></select></label><textarea required rows={3} placeholder={question.scoring_strategy === 'keyword' ? 'Required keywords, separated by commas' : 'Answer key or scoring rubric'} value={question.answer_key} onChange={event => set({ answer_key: event.target.value })} /></div>}
+  </fieldset>;
+}

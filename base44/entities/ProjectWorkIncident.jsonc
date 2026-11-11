@@ -1,0 +1,65 @@
+{
+  "name": "ProjectWorkIncident",
+  "type": "object",
+  "properties": {
+    "student_id": {
+      "type": "string",
+      "description": "User id of the student marked off task"
+    },
+    "student_name": {
+      "type": "string"
+    },
+    "week_start": {
+      "type": "string",
+      "format": "date",
+      "description": "Monday of the Chicago school week this incident counts against"
+    },
+    "marked_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the off-task mark was recorded"
+    },
+    "note": {
+      "type": "string",
+      "description": "Optional teacher note about the incident"
+    },
+    "created_by_name": {
+      "type": "string",
+      "description": "Name of the admin who recorded the incident"
+    }
+  },
+  "required": [
+    "student_id",
+    "week_start",
+    "marked_at"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "data.student_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

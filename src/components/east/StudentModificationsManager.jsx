@@ -1,0 +1,23 @@
+import { useEffect, useMemo, useState } from 'react';
+import { Check, Mic, Volume2 } from 'lucide-react';
+import { base44 } from '@/api/base44Client';
+import AbsenceDeadlineAdjustments from './AbsenceDeadlineAdjustments';
+
+const OPTIONS = [{ id: 'dictation', label: 'Dictation', icon: Mic }, { id: 'text_to_speech', label: 'Text-to-speech', icon: Volume2 }, { id: 'assignment_deadline_extension', label: 'Extended assignment deadlines', icon: Check }];
+
+export default function StudentModificationsManager({ users, loading, reload }) {
+  const students = useMemo(() => users.filter(user => user.role !== 'admin' && !user.is_archived).sort((a, b) => (a.full_name || a.email || '').localeCompare(b.full_name || b.email || '')), [users]);
+  const [studentId, setStudentId] = useState('');
+  const [selected, setSelected] = useState([]);
+  const [extensionDays, setExtensionDays] = useState(1);
+  const [absenceAdjustments, setAbsenceAdjustments] = useState([]);
+  const [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState(false);
+  const [corrected, setCorrected] = useState(0);
+  const [error, setError] = useState('');
+  const student = students.find(item => item.id === studentId);
+  useEffect(() => { setSelected(Array.isArray(student?.modifications) ? student.modifications : []); setExtensionDays(Number(student?.assignment_deadline_extension_days) || 1); setAbsenceAdjustments(Array.isArray(student?.absence_deadline_adjustments) ? student.absence_deadline_adjustments : []); setSaved(false); setCorrected(0); setError(''); }, [studentId, student?.updated_date]);
+  const toggle = id => { setSelected(current => current.includes(id) ? current.filter(item => item !== id) : [...current, id]); setSaved(false); setError(''); };
+  const save = async () => { if (!student) return; setSaving(true); setError(''); try { await base44.entities.User.update(student.id, { modifications: selected, assignment_deadline_extension_days: selected.includes('assignment_deadline_extension') ? extensionDays : 0, absence_deadline_adjustments: absenceAdjustments }); const result = await base44.functions.invoke('reconcileStudentDeadlines', { studentId: student.id }); await reload(); setCorrected(Number(result.data?.corrected) || 0); setSaved(true); } catch { setError('Modifications could not be saved. Please try again.'); } finally { setSaving(false); } };
+  return <section className="glass-panel p-5"><h3 className="font-semibold">Student modifications</h3><p className="mt-1 text-sm text-muted-foreground">Choose accessibility tools that appear only on the selected student’s dashboard.</p><select className="mt-4" value={studentId} onChange={event => setStudentId(event.target.value)} disabled={loading}><option value="">Select a student…</option>{students.map(item => <option key={item.id} value={item.id}>{item.full_name || item.email}</option>)}</select>{student && <div className="mt-4"><p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Select one or more</p><div className="flex flex-wrap gap-2">{OPTIONS.map(({ id, label, icon: Icon }) => { const active = selected.includes(id); return <button key={id} type="button" aria-pressed={active} onClick={() => toggle(id)} className={`inline-flex min-h-10 items-center gap-2 rounded-lg border px-4 text-sm font-semibold ${active ? 'border-neon-cyan bg-neon-cyan/15 text-neon-cyan' : 'border-border bg-secondary text-secondary-foreground'}`}><Icon size={16} />{label}{active && <Check size={15} />}</button>; })}</div>{selected.includes('assignment_deadline_extension') && <label className="east-label mt-4 block max-w-xs">Instructional days added to every deadline<input type="number" min="1" max="30" required value={extensionDays} onChange={event => setExtensionDays(Math.max(1, Math.min(30, Number(event.target.value) || 1)))} /></label>}<AbsenceDeadlineAdjustments value={absenceAdjustments} onChange={value => { setAbsenceAdjustments(value); setSaved(false); }} /><div className="mt-4 flex items-center gap-3"><button type="button" onClick={save} disabled={saving} className="east-button">{saving ? 'Saving…' : 'Save modifications'}</button>{saved && <span className="text-sm font-semibold text-success">Saved{corrected ? ` · ${corrected} assignment record${corrected === 1 ? '' : 's'} corrected` : ''}</span>}</div>{error && <p className="mt-2 text-sm text-destructive">{error}</p>}</div>}</section>;
+}

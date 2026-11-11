@@ -1,0 +1,445 @@
+{
+  "name": "WeeklyCheckIn",
+  "type": "object",
+  "properties": {
+    "project_title": {
+      "type": "string"
+    },
+    "student_names": {
+      "type": "string"
+    },
+    "partner_name": {
+      "type": "string"
+    },
+    "project_pitch_id": {
+      "type": "string",
+      "description": "ID of the ProjectPitch this check-in is tagged to"
+    },
+    "member_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "User IDs allowed to view this team check-in"
+    },
+    "week_ending": {
+      "type": "string",
+      "format": "date"
+    },
+    "hours": {
+      "type": "number",
+      "minimum": 0
+    },
+    "hourly_value": {
+      "type": "number",
+      "minimum": 0,
+      "default": 11
+    },
+    "accomplishment": {
+      "type": "string"
+    },
+    "next_step": {
+      "type": "string"
+    },
+    "blocker": {
+      "type": "string"
+    },
+    "help_needed": {
+      "type": "string",
+      "description": "What the student needs help with this week, or none"
+    },
+    "confidence": {
+      "type": "number",
+      "minimum": 1,
+      "maximum": 5
+    },
+    "evidence_links": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "url",
+          "description"
+        ]
+      }
+    },
+    "evidence_files": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "url",
+          "description"
+        ]
+      }
+    },
+    "evidence_analysis": {
+      "type": "array",
+      "description": "Advisory AI review of publicly accessible evidence used in learning summaries and standards assessment",
+      "items": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string"
+          },
+          "accessible": {
+            "type": "boolean"
+          },
+          "summary": {
+            "type": "string"
+          },
+          "demonstrated_learning": {
+            "type": "string"
+          },
+          "standards_evidence": {
+            "type": "string"
+          },
+          "suggestion": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "url",
+          "accessible",
+          "summary",
+          "demonstrated_learning",
+          "standards_evidence",
+          "suggestion"
+        ]
+      }
+    },
+    "original_submitted_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Immutable timestamp of the first submission"
+    },
+    "grade": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 10
+    },
+    "grade_status": {
+      "type": "string",
+      "enum": [
+        "auto",
+        "pending_review",
+        "reviewed",
+        "duplicate",
+        "extra"
+      ]
+    },
+    "teacher_feedback": {
+      "type": "string"
+    },
+    "is_late": {
+      "type": "boolean",
+      "default": false
+    },
+    "late_reason": {
+      "type": "string"
+    },
+    "is_backdated": {
+      "type": "boolean",
+      "default": false
+    },
+    "approval_status": {
+      "type": "string",
+      "enum": [
+        "approved",
+        "pending",
+        "rejected"
+      ],
+      "default": "approved"
+    },
+    "ai_review_flag": {
+      "type": "boolean",
+      "default": false,
+      "description": "Flags a check-in submitted after two unsuccessful AI writing suggestions"
+    }
+  },
+  "required": [
+    "project_title",
+    "student_names",
+    "partner_name",
+    "week_ending",
+    "hours",
+    "accomplishment",
+    "next_step",
+    "blocker",
+    "help_needed",
+    "confidence"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "data.member_ids": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "create": {
+      "$or": [
+        {
+          "$and": [
+            {
+              "created_by_id": "{{user.id}}"
+            },
+            {
+              "data.week_ending": {
+                "$nin": [
+                  "2026-08-04",
+                  "2026-08-05",
+                  "2026-08-06",
+                  "2026-08-07",
+                  "2026-08-08",
+                  "2026-08-09",
+                  "2026-08-10",
+                  "2026-08-11",
+                  "2026-08-12",
+                  "2026-08-13",
+                  "2026-08-14",
+                  "2026-08-15",
+                  "2026-08-16",
+                  "2026-08-17",
+                  "2026-08-18",
+                  "2026-08-19",
+                  "2026-08-20",
+                  "2026-08-21",
+                  "2026-08-22",
+                  "2026-08-23",
+                  "2026-08-24",
+                  "2026-08-25",
+                  "2026-08-26",
+                  "2026-08-27",
+                  "2026-08-28",
+                  "2026-08-29",
+                  "2026-08-30",
+                  "2026-08-31",
+                  "2026-09-01",
+                  "2026-09-02",
+                  "2026-09-03",
+                  "2026-09-04",
+                  "2026-09-05",
+                  "2026-09-06",
+                  "2026-09-07",
+                  "2026-09-08",
+                  "2026-09-09",
+                  "2026-09-10",
+                  "2026-09-11",
+                  "2026-09-12",
+                  "2026-09-13",
+                  "2026-09-14",
+                  "2026-09-15",
+                  "2026-09-16",
+                  "2026-09-17",
+                  "2026-09-18",
+                  "2026-09-19",
+                  "2026-09-20",
+                  "2026-09-21",
+                  "2026-09-22",
+                  "2026-09-23",
+                  "2026-09-24",
+                  "2026-09-25",
+                  "2026-09-26",
+                  "2026-09-27",
+                  "2026-09-28",
+                  "2026-09-29",
+                  "2026-09-30"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "$and": [
+            {
+              "created_by_id": "{{user.id}}"
+            },
+            {
+              "data.week_ending": {
+                "$nin": [
+                  "2026-08-04",
+                  "2026-08-05",
+                  "2026-08-06",
+                  "2026-08-07",
+                  "2026-08-08",
+                  "2026-08-09",
+                  "2026-08-10",
+                  "2026-08-11",
+                  "2026-08-12",
+                  "2026-08-13",
+                  "2026-08-14",
+                  "2026-08-15",
+                  "2026-08-16",
+                  "2026-08-17",
+                  "2026-08-18",
+                  "2026-08-19",
+                  "2026-08-20",
+                  "2026-08-21",
+                  "2026-08-22",
+                  "2026-08-23",
+                  "2026-08-24",
+                  "2026-08-25",
+                  "2026-08-26",
+                  "2026-08-27",
+                  "2026-08-28",
+                  "2026-08-29",
+                  "2026-08-30",
+                  "2026-08-31",
+                  "2026-09-01",
+                  "2026-09-02",
+                  "2026-09-03",
+                  "2026-09-04",
+                  "2026-09-05",
+                  "2026-09-06",
+                  "2026-09-07",
+                  "2026-09-08",
+                  "2026-09-09",
+                  "2026-09-10",
+                  "2026-09-11",
+                  "2026-09-12",
+                  "2026-09-13",
+                  "2026-09-14",
+                  "2026-09-15",
+                  "2026-09-16",
+                  "2026-09-17",
+                  "2026-09-18",
+                  "2026-09-19",
+                  "2026-09-20",
+                  "2026-09-21",
+                  "2026-09-22",
+                  "2026-09-23",
+                  "2026-09-24",
+                  "2026-09-25",
+                  "2026-09-26",
+                  "2026-09-27",
+                  "2026-09-28",
+                  "2026-09-29",
+                  "2026-09-30"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "$and": [
+            {
+              "created_by_id": "{{user.id}}"
+            },
+            {
+              "data.week_ending": {
+                "$nin": [
+                  "2026-08-04",
+                  "2026-08-05",
+                  "2026-08-06",
+                  "2026-08-07",
+                  "2026-08-08",
+                  "2026-08-09",
+                  "2026-08-10",
+                  "2026-08-11",
+                  "2026-08-12",
+                  "2026-08-13",
+                  "2026-08-14",
+                  "2026-08-15",
+                  "2026-08-16",
+                  "2026-08-17",
+                  "2026-08-18",
+                  "2026-08-19",
+                  "2026-08-20",
+                  "2026-08-21",
+                  "2026-08-22",
+                  "2026-08-23",
+                  "2026-08-24",
+                  "2026-08-25",
+                  "2026-08-26",
+                  "2026-08-27",
+                  "2026-08-28",
+                  "2026-08-29",
+                  "2026-08-30",
+                  "2026-08-31",
+                  "2026-09-01",
+                  "2026-09-02",
+                  "2026-09-03",
+                  "2026-09-04",
+                  "2026-09-05",
+                  "2026-09-06",
+                  "2026-09-07",
+                  "2026-09-08",
+                  "2026-09-09",
+                  "2026-09-10",
+                  "2026-09-11",
+                  "2026-09-12",
+                  "2026-09-13",
+                  "2026-09-14",
+                  "2026-09-15",
+                  "2026-09-16",
+                  "2026-09-17",
+                  "2026-09-18",
+                  "2026-09-19",
+                  "2026-09-20",
+                  "2026-09-21",
+                  "2026-09-22",
+                  "2026-09-23",
+                  "2026-09-24",
+                  "2026-09-25",
+                  "2026-09-26",
+                  "2026-09-27",
+                  "2026-09-28",
+                  "2026-09-29",
+                  "2026-09-30"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
+}

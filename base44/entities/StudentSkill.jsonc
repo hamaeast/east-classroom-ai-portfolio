@@ -1,0 +1,92 @@
+{
+  "name": "StudentSkill",
+  "type": "object",
+  "properties": {
+    "student_name": {
+      "type": "string"
+    },
+    "skill_name": {
+      "type": "string"
+    },
+    "software_tools": {
+      "type": "string"
+    },
+    "proficiency": {
+      "type": "string",
+      "enum": [
+        "beginner",
+        "intermediate",
+        "advanced",
+        "expert"
+      ],
+      "default": "beginner"
+    },
+    "certification_name": {
+      "type": "string"
+    },
+    "certificate_url": {
+      "type": "string"
+    },
+    "notes": {
+      "type": "string"
+    },
+    "school_year": {
+      "type": "string",
+      "description": "School year label this skill was logged in"
+    }
+  },
+  "required": [
+    "student_name",
+    "skill_name"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "create": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
+}

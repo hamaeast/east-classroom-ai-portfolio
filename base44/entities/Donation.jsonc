@@ -1,0 +1,55 @@
+{
+  "name": "Donation",
+  "type": "object",
+  "properties": {
+    "source_name": {
+      "type": "string",
+      "description": "Grant or donor name"
+    },
+    "contact_name": {
+      "type": "string"
+    },
+    "contact_info": {
+      "type": "string",
+      "description": "Email or phone"
+    },
+    "amount": {
+      "type": "number",
+      "minimum": 0
+    },
+    "confirmation_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "source_name",
+    "amount",
+    "confirmation_date"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

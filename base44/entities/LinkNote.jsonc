@@ -1,0 +1,41 @@
+{
+  "name": "LinkNote",
+  "type": "object",
+  "properties": {
+    "link_id": {
+      "type": "string",
+      "description": "ID of the ImportantLink this note is attached to"
+    },
+    "note": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "link_id"
+  ],
+  "rls": {
+    "create": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "user"
+          }
+        }
+      ]
+    },
+    "read": {
+      "created_by_id": "{{user.id}}"
+    },
+    "update": {
+      "created_by_id": "{{user.id}}"
+    },
+    "delete": {
+      "created_by_id": "{{user.id}}"
+    }
+  }
+}

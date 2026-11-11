@@ -1,0 +1,195 @@
+{
+  "name": "WritingGrowthRecord",
+  "type": "object",
+  "properties": {
+    "student_id": {
+      "type": "string"
+    },
+    "student_name": {
+      "type": "string"
+    },
+    "reporting_from": {
+      "type": "string",
+      "format": "date"
+    },
+    "reporting_to": {
+      "type": "string",
+      "format": "date"
+    },
+    "current_status": {
+      "type": "string",
+      "enum": [
+        "Growth Evident",
+        "Growth Emerging",
+        "Building Evidence",
+        "Continue Monitoring"
+      ]
+    },
+    "growth_areas": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "starting_point": {
+      "type": "object",
+      "properties": {
+        "sample_id": {
+          "type": "string"
+        },
+        "source_id": {
+          "type": "string"
+        },
+        "source_type": {
+          "type": "string"
+        },
+        "sample_type": {
+          "type": "string"
+        },
+        "date": {
+          "type": "string"
+        },
+        "context": {
+          "type": "string"
+        },
+        "text": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "sample_id",
+        "date",
+        "sample_type",
+        "text"
+      ]
+    },
+    "growth_evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "sample_id": {
+            "type": "string"
+          },
+          "source_id": {
+            "type": "string"
+          },
+          "source_type": {
+            "type": "string"
+          },
+          "sample_type": {
+            "type": "string"
+          },
+          "date": {
+            "type": "string"
+          },
+          "context": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "sample_id",
+          "date",
+          "sample_type",
+          "text"
+        ]
+      }
+    },
+    "current_evidence": {
+      "type": "object",
+      "properties": {
+        "sample_id": {
+          "type": "string"
+        },
+        "source_id": {
+          "type": "string"
+        },
+        "source_type": {
+          "type": "string"
+        },
+        "sample_type": {
+          "type": "string"
+        },
+        "date": {
+          "type": "string"
+        },
+        "context": {
+          "type": "string"
+        },
+        "text": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "sample_id",
+        "date",
+        "sample_type",
+        "text"
+      ]
+    },
+    "growth_observed": {
+      "type": "string"
+    },
+    "area_findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "area": {
+            "type": "string"
+          },
+          "finding": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "area",
+          "finding"
+        ]
+      }
+    },
+    "preserved_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "student_id",
+    "student_name",
+    "reporting_from",
+    "reporting_to",
+    "current_status",
+    "growth_areas",
+    "starting_point",
+    "growth_evidence",
+    "current_evidence",
+    "growth_observed",
+    "area_findings",
+    "preserved_at"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

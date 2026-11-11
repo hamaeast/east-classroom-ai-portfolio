@@ -1,0 +1,93 @@
+{
+  "name": "CheckInMakeup",
+  "type": "object",
+  "properties": {
+    "student_id": {
+      "type": "string"
+    },
+    "week_ending": {
+      "type": "string",
+      "format": "date",
+      "description": "The closed weekly check-in week this makeup tutorial replaces"
+    },
+    "skill_title": {
+      "type": "string",
+      "description": "The skill or technology the tutorial teaches"
+    },
+    "format": {
+      "type": "string",
+      "enum": [
+        "written",
+        "video"
+      ]
+    },
+    "written_steps": {
+      "type": "string",
+      "description": "Written step-by-step tutorial content"
+    },
+    "video_url": {
+      "type": "string"
+    },
+    "video_description": {
+      "type": "string",
+      "description": "Written description of the steps covered in the video, used for AI grading"
+    },
+    "ai_score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 10,
+      "description": "AI-assigned score. Half-credit makeups score 0\u20135; a full-credit rescue student scores 0\u201310."
+    },
+    "ai_feedback": {
+      "type": "string"
+    },
+    "graded_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "graded",
+        "returned"
+      ],
+      "default": "graded"
+    }
+  },
+  "required": [
+    "student_id",
+    "week_ending",
+    "skill_title",
+    "format",
+    "status"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "data.student_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

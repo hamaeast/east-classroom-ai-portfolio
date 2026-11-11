@@ -1,0 +1,5 @@
+import { NINE_WEEK_PERIODS } from '@/lib/gradingPeriods';
+
+export default function NineWeekToggle({ value, onChange }) {
+  return <div className="glass-panel mb-4 p-4"><p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Select nine weeks</p><div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-4">{NINE_WEEK_PERIODS.map(period => <button key={period.number} type="button" aria-pressed={value === period.number} onClick={() => onChange(period.number)} className={`rounded-lg border px-3 py-2 text-left text-sm ${value === period.number ? 'border-neon-cyan bg-neon-cyan/10 text-neon-cyan' : 'border-border text-muted-foreground hover:border-neon-magenta/50'}`}><span className="block font-semibold">Nine Weeks {period.number}</span><span className="block text-xs">{period.label}</span></button>)}</div></div>;
+}

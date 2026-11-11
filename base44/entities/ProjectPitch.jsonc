@@ -1,0 +1,147 @@
+{
+  "name": "ProjectPitch",
+  "type": "object",
+  "properties": {
+    "project_title": {
+      "type": "string"
+    },
+    "student_names": {
+      "type": "string"
+    },
+    "problem": {
+      "type": "string"
+    },
+    "solution": {
+      "type": "string"
+    },
+    "technology_use": {
+      "type": "string"
+    },
+    "ethics_statement": {
+      "type": "string",
+      "description": "How the project acts responsibly, fairly, and helps people"
+    },
+    "ethical_concerns": {
+      "type": "string",
+      "description": "Possible ethical concerns and how the team will address them"
+    },
+    "client_name": {
+      "type": "string"
+    },
+    "community_partner_name": {
+      "type": "string"
+    },
+    "client_partner_name": {
+      "type": "string"
+    },
+    "tagged_emails": {
+      "type": "string"
+    },
+    "member_emails": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "approval_status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "revision_requested",
+        "approved",
+        "rejected"
+      ],
+      "default": "pending"
+    },
+    "admin_feedback_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "student_interaction_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "student_changed_fields": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "project_title",
+          "problem",
+          "solution",
+          "technology_use",
+          "ethics_statement",
+          "ethical_concerns",
+          "client_name",
+          "community_partner_name"
+        ]
+      },
+      "description": "Fields changed in the student's latest pitch resubmission"
+    }
+  },
+  "required": [
+    "project_title",
+    "problem",
+    "solution",
+    "technology_use"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "user"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "create": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "data.member_emails": {
+            "$in": [
+              "{{user.email}}"
+            ]
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "name": "DoNowQuestion",
+  "type": "object",
+  "properties": {
+    "question": {
+      "type": "string"
+    },
+    "school_date": {
+      "type": "string",
+      "format": "date"
+    }
+  },
+  "required": [
+    "question",
+    "school_date"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "user"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

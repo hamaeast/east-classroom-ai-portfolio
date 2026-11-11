@@ -1,0 +1,5 @@
+export const CART_EVIDENCE_GUIDANCE = `CART EVIDENCE LENS:
+CRITICAL THINKING — Look for investigation of root causes rather than surface symptoms; meaningful integration of resources such as GIS mapping, 3D printing, or CAD; and polished, sophisticated deliverables that move beyond basic ideas.
+ADVANCE — Look for growth from technology novice toward project leadership; self-directed learning driven by curiosity rather than lectures; and mastery of professional software through trial, error, and persistence.
+REAL — Look for authentic work with community clients such as nonprofits, fire departments, or schools; ethical choices that respect community needs; and measurable value through concrete assets built for a target audience.
+TEAMWORK — Look for delegation of technical roles and combined strengths; interviews and work with civic leaders or professionals; and mentorship where experienced students teach peers to manage tools.`;
