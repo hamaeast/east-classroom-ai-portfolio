@@ -1,5 +1,7 @@
 # Evaluation plan (proposed, not yet run)
 
+A first, ready-to-run piece of this plan is the [goal-check evaluation kit](eval/README.md).
+
 The app is in daily use, but how often the AI's judgments are right has not been measured. This page lays out how I would measure it. **No results are reported here.**
 
 ## Questions to answer

@@ -14,7 +14,7 @@ A classroom web app for a junior-high **EAST** program. Students plan work with 
 
 1. **Try the demo.** Open the **[live demo](https://hamaeast.github.io/east-classroom-ai-portfolio/)**, or watch the walkthrough above (about 40 seconds). Every student and record in it is fictional, and every AI response is prerecorded and labeled as such. The demo can't reach the live app or any AI service.
 2. **Explore the learning evidence.** Open the demo's **[Standards & evidence tab](https://hamaeast.github.io/east-classroom-ai-portfolio/#standards)**, then read [docs/standards-assessment.md](docs/standards-assessment.md). Together they show how a student's work across the dashboard becomes a placement on each EAST standard, with an evidence explanation and a next step, and how code converts placements into a grade with a fixed rule.
-3. **See the design decisions.** [docs/ai-design.md](docs/ai-design.md) explains how prompts are grounded in student work and rubrics, which safeguards code enforces versus which the prompt only asks for, and where the teacher reviews. [docs/iterations.md](docs/iterations.md) covers how prompts and workflows changed after students reported unclear feedback or grading problems.
+3. **See the design decisions.** [docs/ai-design.md](docs/ai-design.md) explains how prompts are grounded in student work and rubrics, which safeguards code enforces versus which the prompt only asks for, and where the teacher reviews. [docs/prompt-design.md](docs/prompt-design.md) shows six of the real prompts with notes on each. [docs/iterations.md](docs/iterations.md) covers how prompts and workflows changed after students reported unclear feedback or grading problems.
 
 
 > **How student data was protected:** No real student records were copied. A student's name and email, the school and district names, a classroom photo folder, and other private links were removed from the code and replaced with settings or placeholders. Every student in the demo and screenshots is made up. Details: [docs/public-copy-notes.md](docs/public-copy-notes.md).
@@ -75,6 +75,23 @@ Walk through one standard, from source evidence to placement, next step, history
 | Standards walkthrough (one fictional student, one standard) |
 |-|
 | ![Standards assessment walkthrough](docs/screenshots/standards.png) |
+
+## What the usage data showed
+
+Aggregate counts from Aug 1 to Nov 11, 2026 (100 students; no individual data). These are activity counts, not learning outcomes. Full details: [docs/usage-data.md](docs/usage-data.md).
+
+- **1,171 goals, 1,054 check-ins and 1,096 AI-reviewed evidence links.** 96 of 100 students have a goal, a check-in and a standards assessment.
+- **The AI couldn't open 704 of the 1,096 evidence links (64%).** This supports making evidence review advisory instead of letting it block submissions.
+- **89% of goals got an AI clarification,** far more than the prompt intends. A month-by-month check and a small [evaluation kit](docs/eval/README.md) are the planned next steps.
+- **Standards placements run high:** about 45% of highest placements are in the 9-12 band, and none at Mastery. That's why the docs call them model judgments, not validated measures.
+
+## Equity and access
+
+- **Accommodations the teacher assigns per student:** dictation, read-aloud, and deadline extensions counted in school days.
+- **Prompts judge ideas and effort, not writing polish.** That matters for students who are learning English or still building writing skills.
+- **Feedback loops end.** Students get at most one AI clarification per goal and two rounds of hints per check-in, then the work goes to the teacher.
+
+Details: [docs/equity-and-access.md](docs/equity-and-access.md).
 
 ## AI design in brief
 
@@ -145,6 +162,9 @@ I helped three colleagues get started building with Base44 and supported them wi
 ## Further documentation
 
 **Completed work**
+- [docs/prompt-design.md](docs/prompt-design.md): six real prompts, with the patterns they share
+- [docs/usage-data.md](docs/usage-data.md): aggregate usage counts and three findings
+- [docs/equity-and-access.md](docs/equity-and-access.md): accommodations and design choices for students with different needs
 - [docs/efficiency.md](docs/efficiency.md): where rules in code replace or shrink AI calls, with quoted code
 - [docs/security-review.md](docs/security-review.md): who can write grades, and the server-side fixes deployed on 2026-11-11
 - Source-code examples:
@@ -157,6 +177,7 @@ I helped three colleagues get started building with Base44 and supported them wi
 
 **Proposed, not yet run**
 - [docs/evaluation-plan.md](docs/evaluation-plan.md): how I would measure whether the AI's judgments match a teacher's. No results are reported yet.
+- [docs/eval/](docs/eval/README.md): a ready-to-run test of the goal prompt with 24 fictional goals. Not yet run.
 
 ## Checks
 
