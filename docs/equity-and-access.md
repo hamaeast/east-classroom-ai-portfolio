@@ -30,5 +30,5 @@ These appear on the student screens where they're most needed: weekly goals and 
 ## Limits
 
 - Dictation and read-aloud depend on the student's browser supporting speech features. They're set to US English only.
-- Reading-level instructions are interpreted loosely by the model. The [usage data](usage-data.md) shows the goal check still sends back far more goals than intended.
+- Reading-level instructions are interpreted loosely by the model. The [usage data](usage-data.md) shows the goal check sends back far more real goals than intended, even though it [accepted clear test goals as designed](eval/results-2026-11-12.md).
 - No outcomes have been measured by student group.

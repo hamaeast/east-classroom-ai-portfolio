@@ -82,7 +82,7 @@ Aggregate counts from Aug 1 to Nov 11, 2026 (100 students; no individual data). 
 
 - **1,171 goals, 1,054 check-ins and 1,096 AI-reviewed evidence links.** 96 of 100 students have a goal, a check-in and a standards assessment.
 - **The AI couldn't open 704 of the 1,096 evidence links (64%).** This supports making evidence review advisory instead of letting it block submissions.
-- **89% of goals got an AI clarification,** far more than the prompt intends. A month-by-month check and a small [evaluation kit](docs/eval/README.md) are the planned next steps.
+- **89% of goals got an AI clarification,** far more than intended. A [test of the live prompt](docs/eval/results-2026-11-12.md) on 24 fictional goals matched the intended answer in 70 of 72 runs. The prompt behaves as designed on clear goals, so the next step is checking real goals and the live context.
 - **About 45% of highest standards placements are in the 9-12 band, and none at Mastery.** The class spans grades 7–9, so splitting by grade is the next check. Until then, the docs call placements model judgments, not validated measures.
 
 ## Equity and access
@@ -163,6 +163,7 @@ I helped three colleagues get started building with Base44 and supported them wi
 
 **Completed work**
 - [docs/prompt-design.md](docs/prompt-design.md): six real prompts, with the patterns they share
+- [docs/eval/](docs/eval/README.md): a test of the live goal prompt on 24 fictional goals, run on 2026-11-12. 70 of 72 runs matched the intended answer ([results](docs/eval/results-2026-11-12.md))
 - [docs/usage-data.md](docs/usage-data.md): aggregate usage counts and three findings
 - [docs/equity-and-access.md](docs/equity-and-access.md): accommodations and design choices for students with different needs
 - [docs/efficiency.md](docs/efficiency.md): where rules in code replace or shrink AI calls, with quoted code
@@ -177,7 +178,7 @@ I helped three colleagues get started building with Base44 and supported them wi
 
 **Proposed, not yet run**
 - [docs/evaluation-plan.md](docs/evaluation-plan.md): how I would measure whether the AI's judgments match a teacher's. No results are reported yet.
-- [docs/eval/](docs/eval/README.md): a ready-to-run test of the goal prompt with 24 fictional goals. Not yet run.
+- Further checks from the plan: month-by-month clarification rates, a labeled sample of real goals, and placements compared with teacher ratings. Not yet run.
 
 ## Checks
 

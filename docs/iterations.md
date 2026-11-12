@@ -8,7 +8,7 @@ These are design changes I made after the August 2026 launch. Most started with 
 - **Change:** The prompt now says to accept a goal *immediately* if the intended action can be understood: "Short, simple goals and imperfect spelling or grammar are fine." For the first weeks of school, a separate check looks only at whether the writing is understandable (`src/lib/goalWritingCheck.js`).
 - **Where:** `src/components/east/WeeklyGoalForm.jsx` (prompt), `src/lib/goalWritingCheck.js`.
 - **Enforcement:** prompt only. The model decides what counts as "understandable."
-- **What the data shows so far:** 89% of goals since August got a clarification, so this change hasn't clearly worked yet. See [usage-data.md](usage-data.md) for the planned month-by-month check and evaluation.
+- **What the data shows so far:** 89% of goals since August got a clarification, but a [test of the live prompt](eval/results-2026-11-12.md) accepted clear short goals in 34 of 36 runs. The next step is checking real goals; see [usage-data.md](usage-data.md).
 
 ## 2. Reduce unnecessary planning questions
 

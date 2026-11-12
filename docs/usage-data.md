@@ -26,7 +26,7 @@ A goal gets this flag only when the model judges it unclear. The prompt is writt
 - The count covers the whole period, including the first weeks, when a separate early-year writing check was used, and before the prompt was relaxed.
 - The model may still be applying a higher bar than the prompt asks for.
 
-**Planned next step:** break the rate down by month to see whether it dropped after the prompt changes. Then run the [evaluation kit](eval/README.md) on fictional goals to compare the model's calls with mine, and try adding labeled examples to the prompt.
+**Update, 2026-11-12:** I ran the [evaluation kit](eval/results-2026-11-12.md) through the live prompt. On 24 fictional goals, it matched the intended answer in 70 of 72 runs, and only one clear goal ("make the website") was sent back, in 2 of its 3 runs. So the prompt works as designed on clear goals. The high live rate more likely comes from what students actually write, the student-history context, or the early-year writing check. **Planned next step:** break the rate down by month, and label a sample of real goals that were sent back.
 
 ### 3. Many placements are in the 9-12 band, and none at Mastery
 

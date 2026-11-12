@@ -1,6 +1,6 @@
 # Evaluation plan (proposed, not yet run)
 
-A first, ready-to-run piece of this plan is the [goal-check evaluation kit](eval/README.md).
+**First step done:** the [goal-check evaluation kit](eval/README.md) was run on 2026-11-12 through the live prompt, on 24 fictional goals. See the [results](eval/results-2026-11-12.md). The rest of this plan, using anonymized real work and a second teacher, hasn't been run.
 
 The app is in daily use, but how often the AI's judgments are right has not been measured. This page lays out how I would measure it. **No results are reported here.**
 

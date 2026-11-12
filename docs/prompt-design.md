@@ -23,7 +23,7 @@ These are real prompts from the EAST Dashboard, copied from the source. Each one
 - **Grounding:** the student's own recent goals, pitches and check-ins (`recommendationContext`).
 - **Output:** `{acceptable: boolean, suggestion: string}`
 - **Enforced in code:** only one clarification per goal, because a flag saved on the record skips the AI on the next submission. If the call fails, the goal is accepted.
-- **Design note:** most of the wording is about what *not* to require. It came out of [iteration 1 and 2](iterations.md), where goals that were clear enough were being sent back. Usage data suggests this still needs work (see [usage-data.md](usage-data.md)).
+- **Design note:** most of the wording is about what *not* to require. It came out of [iteration 1 and 2](iterations.md), where goals that were clear enough were being sent back. A [test on 24 fictional goals](eval/results-2026-11-12.md) matched the intended answer in 70 of 72 runs. The live clarification rate is still much higher (see [usage-data.md](usage-data.md)).
 
 ## 2. Check-in review: lenient on writing, careful about evidence
 
@@ -90,5 +90,5 @@ These are real prompts from the EAST Dashboard, copied from the source. Each one
 
 ## What these prompts don't use yet
 
-- **Few-shot examples.** None of the prompts include worked examples of good and bad inputs. The next step would be adding two or three labeled examples to the goal prompt (#1) and checking with the [evaluation kit](eval/README.md) whether that lowers the clarification rate.
+- **Few-shot examples.** None of the prompts include worked examples of good and bad inputs. Since the goal prompt already scores well on the [test set](eval/results-2026-11-12.md), examples would be tried only if a labeled sample of real goals shows clear goals being sent back.
 - **Version history.** The app doesn't keep old prompt versions, so the iterations doc describes changes rather than showing before-and-after text.

@@ -1,6 +1,6 @@
-# Evaluation kit: weekly goal check (not yet run)
+# Evaluation kit: weekly goal check
 
-This is a small, ready-to-run test for the weekly goal prompt ([prompt-design.md #1](../prompt-design.md#1-weekly-goal-check-accept-or-ask-one-question)). **It has not been run, and no results are reported here.** It is the first step of the [evaluation plan](../evaluation-plan.md), and it goes with finding 2 in [usage-data.md](../usage-data.md).
+This is a small, ready-to-run test for the weekly goal prompt ([prompt-design.md #1](../prompt-design.md#1-weekly-goal-check-accept-or-ask-one-question)). **First run, 2026-11-12: 70 of 72 runs matched the intended answer. See [results-2026-11-12.md](results-2026-11-12.md).** It is the first step of the [evaluation plan](../evaluation-plan.md), and it goes with finding 2 in [usage-data.md](../usage-data.md).
 
 ## What's here
 
@@ -19,4 +19,4 @@ This is a small, ready-to-run test for the weekly goal prompt ([prompt-design.md
 
 ## Results
 
-Not run yet. When it is, record the model, date, prompt version, and the four counts above, and say plainly that these are fictional goals, not student data.
+- [2026-11-12](results-2026-11-12.md): run in the live app through its real AI call, from an admin-only test page. 70 of 72 runs matched (97%). Two runs wrongly sent back a goal, none wrongly accepted one, no suggestion asked more than one question, and 1 case was inconsistent across runs.
