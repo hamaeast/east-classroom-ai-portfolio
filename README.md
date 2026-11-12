@@ -55,7 +55,7 @@ EAST is project-based. Students pick community or technology projects and work o
 | Project pitches | Problem, solution, technology plan, ethics | Approve or return with comments; teams sync to members |
 | Assignments and reading responses | Answer questions; AI scores against the teacher's answer key or rubric | Gradebook, regrade, overrides, CSV/PDF export |
 | Makeups for closed weeks | Write a step-by-step tutorial; AI scores it against a short rubric | Override the score or return it; open a makeup window for an individual student |
-| Learning evidence | n/a | AI-assisted standards, writing-growth and learning-growth reports built from dated records |
+| Learning evidence and standards | See their placement on each of the 7 EAST standards: grade band, level, the matching "I can" target, an evidence explanation, and a next step with two examples. Also a growth chart per standard, their expected nine-weeks standards grade with suggestions, and a plain-language learning summary of their own records | Run standards updates for the class, freeze nine-weeks standards grades into the gradebook, and use below-70, below-grade-level, writing-growth and learning-growth reports built from dated records |
 
 ## Featured: standards-based learning evidence
 
