@@ -73,7 +73,7 @@ These are real prompts from the EAST Dashboard, copied from the source. Each one
 
 - **Output:** for each of the 7 standards, `grade_band` and `level` (each from a fixed list) plus `evidence_summary`, which must include "Next step:" and two numbered examples.
 - **Enforced in code:** the highest placement is kept, and a new history record is saved only when a placement rises. The grade comes from a fixed rule, not from the model.
-- **Design note:** this is the most heavily grounded prompt in the app. Usage data shows placements still run high (see [usage-data.md](usage-data.md)), which is why the docs call them model judgments, not validated measures.
+- **Design note:** this is the most heavily grounded prompt in the app. The usage data shows many placements in the 9-12 band and none at Mastery, which hasn't been checked against teacher ratings yet (see [usage-data.md](usage-data.md)). That's why the docs call them model judgments, not validated measures.
 
 ## 6. Learning-growth evidence: code builds the cases, the model only judges them
 

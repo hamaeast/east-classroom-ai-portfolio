@@ -28,9 +28,9 @@ A goal gets this flag only when the model judges it unclear. The prompt is writt
 
 **Planned next step:** break the rate down by month to see whether it dropped after the prompt changes. Then run the [evaluation kit](eval/README.md) on fictional goals to compare the model's calls with mine, and try adding labeled examples to the prompt.
 
-### 3. Standards placements run high
+### 3. Many placements are in the 9-12 band, and none at Mastery
 
-Across the 7 standards, about 45% of students' highest placements are in the **9-12** band, and **none are at Mastery**. For any student enrolled below 9th grade, a 9-12 placement is above their own band. The grade formula caps credit at the student's enrolled band, so grades aren't inflated by this. It does suggest that either the model reads the targets generously or keeping the highest placement locks in generous runs. **Planned next step:** compare a sample of placements with my own ratings before trusting band-level placements for anything beyond feedback.
+Across the 7 standards, about 45% of students' highest placements are in the **9-12** band, and **none are at Mastery**. The class spans grades 7–9. For 9th graders, 9-12 is their own band. For 7th and 8th graders, it's above their band. The stats aren't split by grade, so they can't yet show how many placements are above band. Either way, the grade formula caps credit at each student's enrolled band, so grades aren't inflated. Zero Mastery placements across about 113 students is worth checking too. **Planned next step:** split placements by grade level, and compare a sample with my own ratings before trusting band-level placements for anything beyond feedback.
 
 About 18% of all standard results (461 of roughly 2,625) said "Not enough dashboard evidence yet," which is the default the prompt asks for when evidence is thin.
 

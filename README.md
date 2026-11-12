@@ -83,7 +83,7 @@ Aggregate counts from Aug 1 to Nov 11, 2026 (100 students; no individual data). 
 - **1,171 goals, 1,054 check-ins and 1,096 AI-reviewed evidence links.** 96 of 100 students have a goal, a check-in and a standards assessment.
 - **The AI couldn't open 704 of the 1,096 evidence links (64%).** This supports making evidence review advisory instead of letting it block submissions.
 - **89% of goals got an AI clarification,** far more than the prompt intends. A month-by-month check and a small [evaluation kit](docs/eval/README.md) are the planned next steps.
-- **Standards placements run high:** about 45% of highest placements are in the 9-12 band, and none at Mastery. That's why the docs call them model judgments, not validated measures.
+- **About 45% of highest standards placements are in the 9-12 band, and none at Mastery.** The class spans grades 7–9, so splitting by grade is the next check. Until then, the docs call placements model judgments, not validated measures.
 
 ## Equity and access
 
